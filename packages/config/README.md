@@ -35,3 +35,9 @@ Prettier formats, ESLint finds mistakes and never formats.
 
 A new error-level rule, or a warning raised to an error, is a breaking change and a major version. Import rules, when
 they're added, come from eslint-plugin-import-x; a React preset, when a site needs one, pins `settings.react.version`.
+
+## Where versions come from
+
+Every version from 0.1.1 on is built and staged by `publish.yml` in CoderizeHQ/packages, with provenance, and goes
+live only once James approves it on npmjs.com. 0.0.0 was the one hand-staged bootstrap version; 0.1.0 was tagged but
+never published.
