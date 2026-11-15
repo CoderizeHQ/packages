@@ -39,5 +39,5 @@ they're added, come from eslint-plugin-import-x; a React preset, when a site nee
 ## Where versions come from
 
 Every version from 0.1.1 on is built and staged by `publish.yml` in CoderizeHQ/packages, with provenance, and goes
-live only once James approves it on npmjs.com. 0.0.0 was the one hand-staged bootstrap version; 0.1.0 was tagged but
-never published.
+live only once James approves it on npmjs.com. 0.1.1 is the first version on npm: the hand-staged bootstrap versions
+(0.0.0 and 0.0.0-stage) were unpublished on 2026-11-15, and 0.1.0 was tagged but never published.
