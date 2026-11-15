@@ -28,11 +28,12 @@ jobs:
         with:
           persist-credentials: false
 
+      # setup-node, not pnpm/setup: this job runs npm, and pnpm/setup's Node isn't on the PATH for it (the runner's own
+      # npm 10 is, and it can't stage: config-v0.1.0 failed that way).
       - name: Setup Node
-        uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          runtime: node@24
-          install: false
+          node-version: 24
 
       # The tag names the package and version; both must match its package.json, or nothing is staged.
       - name: Find the package
