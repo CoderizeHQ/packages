@@ -1,0 +1,18 @@
+name: ci
+
+# The checks on every PR: actions' ci-node (PR title, gitleaks over the full history, the dependency audit, install,
+# ESLint and the tests of every package).
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: CoderizeHQ/actions/.github/workflows/ci-node.yml@v1
+    permissions:
+      contents: read
+      actions: read

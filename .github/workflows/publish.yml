@@ -1,0 +1,60 @@
+name: publish
+
+# Stages a package on npm when Release Please tags its release (`<component>-v1.2.3`, made by the coderizehq-release
+# App). npm's trusted publisher for each package accepts only this repo, this file and the `npm` environment, and only
+# staging: the version waits on npmjs.com until James approves it with his passkey (STANDARDS.md 6). It runs on a
+# GitHub-hosted runner because npm's trusted publishing accepts no other, and it uses npm itself because pnpm can't
+# stage a publish (the one place npm runs, STANDARDS.md 3). Nothing is installed: the published files are plain
+# JavaScript with no build step.
+on:
+  push:
+    tags: ['*-v*']
+
+permissions: {}
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
+        with:
+          runtime: node@24
+          install: false
+
+      # The tag names the package and version; both must match its package.json, or nothing is staged.
+      - name: Find the package
+        id: pkg
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          component=${TAG%-v*}
+          version=${TAG##*-v}
+          dir=packages/$component
+          [ -f "$dir/package.json" ] || { echo "::error::$TAG names no package (no $dir/package.json)"; exit 1; }
+          actual=$(jq -r .version "$dir/package.json")
+          [ "$actual" = "$version" ] || { echo "::error::$TAG, but $dir/package.json says $actual"; exit 1; }
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          echo "Staging $(jq -r .name "$dir/package.json")@$version from $dir" >> "$GITHUB_STEP_SUMMARY"
+
+      # Staged publishing needs npm 11.15 or later (Node 24 ships with 11.19).
+      - name: Check npm
+        run: |
+          v=$(npm --version)
+          [ "$(printf '%s\n' 11.15.0 "$v" | sort -V | head -1)" = 11.15.0 ] || { echo "::error::npm $v can't stage"; exit 1; }
+
+      - name: Stage on npm (James approves on npmjs.com)
+        working-directory: ${{ steps.pkg.outputs.dir }}
+        run: npm stage publish --provenance --access public

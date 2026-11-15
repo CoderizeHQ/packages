@@ -1,0 +1,41 @@
+{
+  "name": "@coderizehq/config",
+  "version": "0.0.0",
+  "description": "CoderizeHQ's shared ESLint and Prettier config",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
+    "directory": "packages/config"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.js",
+    "./prettier": "./prettier.js"
+  },
+  "files": [
+    "eslint.js",
+    "prettier.js"
+  ],
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.14.0",
+    "prettier-plugin-astro": "^1.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.15.0",
+    "prettier": "^3.10.1"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
