@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   publish:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     environment: npm
     permissions:
       contents: read
@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
 
       # The tag names the package and version; both must match its package.json, or nothing is staged.
       - name: Find the package
@@ -50,7 +50,7 @@ jobs:
           echo "dir=$dir" >> "$GITHUB_OUTPUT"
           echo "Staging $(jq -r .name "$dir/package.json")@$version from $dir" >> "$GITHUB_STEP_SUMMARY"
 
-      # Staged publishing needs npm 11.15 or later (Node 24 ships with 11.19).
+      # Staged publishing needs npm 11.15 or later (Node 26 ships with 11.20).
       - name: Check npm
         run: |
           v=$(npm --version)
