@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/CoderizeHQ/packages/compare/config-v0.1.1...config-v0.2.0) (2026-11-16)
+
+
+### Features
+
+* require Node 26 in @coderizehq/config ([#12](https://github.com/CoderizeHQ/packages/issues/12)) ([928751a](https://github.com/CoderizeHQ/packages/commit/928751a7b51f13c3fd6c265fe4ab2324a729261a))
+
 ## [0.1.1](https://github.com/CoderizeHQ/packages/compare/config-v0.1.0...config-v0.1.1) (2026-11-15)
 
 

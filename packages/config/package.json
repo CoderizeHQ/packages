@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/config",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "CoderizeHQ's shared ESLint and Prettier config",
   "repository": {
     "type": "git",
