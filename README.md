@@ -24,5 +24,5 @@ Undo: deprecate the version (`npm deprecate`, James); never unpublish.
 
 ## Working here
 
-pnpm only (`pnpm install`, `pnpm test`); Node 24. `pnpm test` runs every package's tests. The repo lints and formats
+pnpm only (`pnpm install`, `pnpm test`); Node 26. `pnpm test` runs every package's tests. The repo lints and formats
 itself with `@coderizehq/config` from this workspace.
