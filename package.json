@@ -4,7 +4,7 @@
   "description": "Shared npm packages for CoderizeHQ repos",
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test \"packages/config/test/*.test.mjs\" && pnpm --recursive test"
   },
   "devDependencies": {
     "@coderizehq/config": "workspace:*",
