@@ -1,0 +1,69 @@
+{
+  "name": "@coderizehq/game-kit",
+  "version": "0.0.0",
+  "description": "Shared pieces of Coderize's Capacitor games: Play Games cloud save (with its Android plugin) and haptics",
+  "keywords": [
+    "capacitor",
+    "capacitor-plugin",
+    "games",
+    "coderizehq"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
+    "directory": "packages/game-kit"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./cloud-save": {
+      "types": "./cloudSave.d.ts",
+      "default": "./cloudSave.js"
+    },
+    "./haptics": {
+      "types": "./haptics.d.ts",
+      "default": "./haptics.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "android/build.gradle",
+    "android/src/main/",
+    "cloudSave.d.ts",
+    "cloudSave.js",
+    "haptics.d.ts",
+    "haptics.js",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run && tsc -p test/types"
+  },
+  "devDependencies": {
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/haptics": "^8.0.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/haptics": "^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@capacitor/haptics": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+// The CloudSave Capacitor plugin. `cap sync android` adds this module to the game's build and
+// registers the plugin, because package.json names this folder under `capacitor.android.src`.
+// Laid out like @capacitor/haptics 8.0.2, which builds in all three games today.
+//
+// Versions come from the game's android/variables.gradle when it sets them, so the plugin
+// and the game compile against the same Play Games SDK. The fallbacks match what the games
+// use today.
+ext {
+    playServicesGamesV2Version = project.hasProperty('playServicesGamesV2Version') ? rootProject.ext.playServicesGamesV2Version : '22.1.0'
+    androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.7.1'
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.2'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace = "dev.coderize.cloudsave"
+    compileSdk = project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 36
+    defaultConfig {
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 24
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 36
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':capacitor-android')
+    // Capacitor's getActivity() returns an AppCompatActivity, so javac needs the class to compile
+    // the plugin. @capacitor/haptics declares it the same way.
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    // Play Games sign-in and saved games. The game declares the same artifact for
+    // PlayGamesSdk.initialize in MainActivity; Gradle resolves the two to one version.
+    implementation "com.google.android.gms:play-services-games-v2:$playServicesGamesV2Version"
+}

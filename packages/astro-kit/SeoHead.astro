@@ -1,0 +1,79 @@
+---
+// Title, description, canonical, Open Graph, Twitter card and robots tags for <head>. No
+// charset or viewport: those stay first in the layout's <head>, above this.
+//
+// Props:
+//   title         the full <title> (the site composes its own suffix); required
+//   description   meta description, og:description and twitter:description
+//   canonical     override: a path or absolute URL. Default: this page's own URL.
+//   image         og:image / twitter:image, a path or absolute URL; falls back to defaultImage
+//   defaultImage  the site's default share image, passed by the layout
+//   imageAlt, imageWidth, imageHeight   describe whichever image is used
+//   type          og:type, `website` by default (`article` for posts)
+//   siteName      og:site_name
+//   locale        og:locale (`en_US`)
+//   twitterSite   twitter:site handle (`@coderize`)
+//   twitterCard   `summary` or `summary_large_image`. Default: `summary_large_image` when there is
+//                 an image, `summary` when there isn't.
+//   noindex       robots noindex, and no canonical unless `canonical` is passed
+//   nofollow      robots nofollow
+//
+// The canonical is always this page's own URL with the trailing slash stripped (root exempt),
+// never a fallback to the home page: a page without a canonical prop gets its own.
+import { canonicalUrl } from './canonical.js'
+
+const TWITTER_CARDS = ['summary', 'summary_large_image']
+
+const {
+  title,
+  description,
+  canonical,
+  image,
+  defaultImage,
+  imageAlt,
+  imageWidth,
+  imageHeight,
+  type = 'website',
+  siteName,
+  locale,
+  twitterSite,
+  twitterCard,
+  noindex = false,
+  nofollow = false,
+} = Astro.props
+
+if (!Astro.site) throw new Error('SeoHead needs `site` set in astro.config.mjs to build absolute URLs')
+if (!title) throw new Error(`SeoHead needs a title (${Astro.url.pathname})`)
+
+const pageUrl = canonicalUrl(canonical ?? Astro.url.pathname, Astro.site)
+const showCanonical = !noindex || canonical !== undefined
+const imageSrc = image ?? defaultImage
+const imageUrl = imageSrc ? new URL(imageSrc, Astro.site).href : undefined
+
+if (twitterCard !== undefined && !TWITTER_CARDS.includes(twitterCard)) {
+  throw new Error(`SeoHead twitterCard must be ${TWITTER_CARDS.join(' or ')} (got ${JSON.stringify(twitterCard)})`)
+}
+const card = twitterCard ?? (imageUrl ? 'summary_large_image' : 'summary')
+const robots = [noindex && 'noindex', nofollow && 'nofollow'].filter(Boolean).join(', ')
+---
+
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+{showCanonical && <link rel="canonical" href={pageUrl} />}
+{robots && <meta name="robots" content={robots} />}
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={pageUrl} />
+{siteName && <meta property="og:site_name" content={siteName} />}
+{locale && <meta property="og:locale" content={locale} />}
+{imageUrl && <meta property="og:image" content={imageUrl} />}
+{imageUrl && imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+{imageUrl && imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
+{imageUrl && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+<meta name="twitter:card" content={card} />
+{twitterSite && <meta name="twitter:site" content={twitterSite} />}
+<meta name="twitter:title" content={title} />
+{description && <meta name="twitter:description" content={description} />}
+{imageUrl && <meta name="twitter:image" content={imageUrl} />}
+{imageUrl && imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}

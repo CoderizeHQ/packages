@@ -1,0 +1,3 @@
+# The round-trip tests compare these byte for byte: never let git touch their line endings.
+*.pdf binary
+*.png binary

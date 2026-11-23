@@ -1,0 +1,19 @@
+---
+// GTM's no-JavaScript fallback, as the first child of <body>: a <noscript> holding an iframe
+// is not valid inside <head>, so it is a component of its own. Same gating as <Gtm>.
+//
+//   <GtmNoscript id={import.meta.env.PUBLIC_GTM_ID} />
+const { id } = Astro.props
+
+const enabled = import.meta.env.PROD && Boolean(id)
+if (enabled && !/^GTM-[A-Z0-9]+$/.test(id))
+  throw new Error(`GtmNoscript: "${id}" is not a GTM container id (GTM-XXXXXXX)`)
+
+const src = `https://www.googletagmanager.com/ns.html?id=${id}`
+---
+
+{enabled && (
+  <noscript>
+    <iframe src={src} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager" />
+  </noscript>
+)}

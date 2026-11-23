@@ -1,0 +1,13 @@
+---
+// One <script type="application/ld+json"> per call. `data` is a node or an array of nodes;
+// an array becomes one @graph. Output is escaped by serializeJsonLd, so a value holding
+// </script> cannot break out of the tag.
+import { serializeJsonLd } from './schema.js'
+
+const { data } = Astro.props
+
+if (data === undefined) throw new Error(`JsonLd needs data (${Astro.url.pathname})`)
+const json = data && !(Array.isArray(data) && data.length === 0) ? serializeJsonLd(data) : undefined
+---
+
+{json && <script is:inline type="application/ld+json" set:html={json} />}

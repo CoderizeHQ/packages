@@ -1,0 +1,67 @@
+{
+  "name": "@coderizehq/format",
+  "version": "0.0.0",
+  "description": "Shared formatting rules for CoderizeHQ apps: Michigan-time dates, integer-cents money, CSV, US phone numbers and slugs, with no dependencies",
+  "keywords": [
+    "format",
+    "coderizehq"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
+    "directory": "packages/format"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./csv": {
+      "types": "./csv.d.ts",
+      "default": "./csv.js"
+    },
+    "./date": {
+      "types": "./date.d.ts",
+      "default": "./date.js"
+    },
+    "./money": {
+      "types": "./money.d.ts",
+      "default": "./money.js"
+    },
+    "./phone": {
+      "types": "./phone.d.ts",
+      "default": "./phone.js"
+    },
+    "./slug": {
+      "types": "./slug.d.ts",
+      "default": "./slug.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "csv.d.ts",
+    "csv.js",
+    "date.d.ts",
+    "date.js",
+    "money.d.ts",
+    "money.js",
+    "phone.d.ts",
+    "phone.js",
+    "slug.d.ts",
+    "slug.js",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run && tsc -p test/types"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

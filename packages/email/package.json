@@ -1,0 +1,63 @@
+{
+  "name": "@coderizehq/email",
+  "version": "0.0.0",
+  "description": "Shared SES email sending for CoderizeHQ apps: one send switch, Simple or raw MIME with attachments, classified errors, an HTML escaper and an SNS signature verifier",
+  "keywords": [
+    "ses",
+    "email",
+    "coderizehq"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
+    "directory": "packages/email"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./sns": {
+      "types": "./sns.d.ts",
+      "default": "./sns.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./index.d.ts",
+  "files": [
+    "CHANGELOG.md",
+    "encode.js",
+    "escape.js",
+    "index.d.ts",
+    "index.js",
+    "mailer.js",
+    "message.js",
+    "mime.js",
+    "sendError.js",
+    "sns.d.ts",
+    "sns.js",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run && tsc -p test/types"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-sesv2": "^3.1161.0",
+    "@types/node": "^26.0.0",
+    "postal-mime": "^4.2.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.4"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-sesv2": "^3.1127.0"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

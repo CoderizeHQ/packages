@@ -1,0 +1,86 @@
+{
+  "name": "@coderizehq/fastify-kit",
+  "version": "0.0.0",
+  "description": "Shared Fastify building blocks for CoderizeHQ APIs: health checks, error handler, trust proxy, request ids, logger, Sentry, security preset, raw webhook bodies, server start and shutdown, env checks and Turnstile",
+  "keywords": [
+    "fastify",
+    "coderizehq"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
+    "directory": "packages/fastify-kit"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./security": "./security.js",
+    "./sentry": "./sentry.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "env.js",
+    "errors.js",
+    "health.js",
+    "index.js",
+    "logger.js",
+    "rawBody.js",
+    "requestId.js",
+    "security.js",
+    "sentry.js",
+    "server.js",
+    "trustProxy.js",
+    "turnstile.js",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fastify/proxy-addr": "^5.1.2",
+    "fastify-plugin": "^6.0.1"
+  },
+  "devDependencies": {
+    "@fastify/cors": "^11.4.0",
+    "@fastify/helmet": "^13.2.0",
+    "@fastify/rate-limit": "^11.2.1",
+    "@sentry/node": "^11.7.0",
+    "fastify": "^5.12.5",
+    "pino-pretty": "^13.2.0",
+    "vitest": "^5.0.4"
+  },
+  "peerDependencies": {
+    "@fastify/cors": "^11.0.0",
+    "@fastify/helmet": "^13.0.0",
+    "@fastify/rate-limit": "^11.0.0",
+    "@sentry/node": "^11.0.0",
+    "fastify": "^5.0.0",
+    "pino-pretty": "^13.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@fastify/cors": {
+      "optional": true
+    },
+    "@fastify/helmet": {
+      "optional": true
+    },
+    "@fastify/rate-limit": {
+      "optional": true
+    },
+    "@sentry/node": {
+      "optional": true
+    },
+    "pino-pretty": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

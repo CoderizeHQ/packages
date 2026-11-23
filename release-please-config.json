@@ -1,10 +1,46 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "separate-pull-requests": true,
   "packages": {
     "packages/config": {
       "release-type": "node",
       "component": "config",
       "initial-version": "0.1.0"
+    },
+    "packages/astro-kit": {
+      "release-type": "node",
+      "component": "astro-kit",
+      "initial-version": "1.0.0"
+    },
+    "packages/email": {
+      "release-type": "node",
+      "component": "email",
+      "initial-version": "1.0.0"
+    },
+    "packages/fastify-kit": {
+      "release-type": "node",
+      "component": "fastify-kit",
+      "initial-version": "1.0.0"
+    },
+    "packages/form-client": {
+      "release-type": "node",
+      "component": "form-client",
+      "initial-version": "1.0.0"
+    },
+    "packages/format": {
+      "release-type": "node",
+      "component": "format",
+      "initial-version": "1.0.0"
+    },
+    "packages/game-kit": {
+      "release-type": "node",
+      "component": "game-kit",
+      "initial-version": "1.0.0"
+    },
+    "packages/stripe": {
+      "release-type": "node",
+      "component": "stripe",
+      "initial-version": "3.0.0"
     }
   }
 }
