@@ -11,7 +11,7 @@
     "eslint": "^10.15.0",
     "prettier": "^3.10.1"
   },
-  "packageManager": "pnpm@12.20.0",
+  "packageManager": "pnpm@12.22.0",
   "engines": {
     "node": ">=26"
   }
