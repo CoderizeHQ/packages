@@ -1,0 +1,58 @@
+{
+  "name": "@coderize/astro-kit",
+  "version": "0.2.0",
+  "description": "Shared head, sitemap, robots.txt, structured data and Google Tag Manager behaviour for CoderizeDEV Astro sites, with no styles",
+  "keywords": [
+    "astro",
+    "astro-component",
+    "seo",
+    "coderize"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "directory": "packages/astro-kit"
+  },
+  "license": "UNLICENSED",
+  "author": "Coderize",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./sitemap": "./sitemap.js",
+    "./track": "./track.js",
+    "./SeoHead.astro": "./SeoHead.astro",
+    "./JsonLd.astro": "./JsonLd.astro",
+    "./Gtm.astro": "./Gtm.astro",
+    "./GtmNoscript.astro": "./GtmNoscript.astro",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "Gtm.astro",
+    "GtmNoscript.astro",
+    "JsonLd.astro",
+    "SeoHead.astro",
+    "canonical.js",
+    "index.js",
+    "robots.js",
+    "schema.js",
+    "sitemap.js",
+    "track.js"
+  ],
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "astro": "^7.4.5",
+    "vitest": "^5.0.4"
+  },
+  "peerDependencies": {
+    "astro": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

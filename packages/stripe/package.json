@@ -1,0 +1,68 @@
+{
+  "name": "@coderize/stripe",
+  "version": "2.3.1",
+  "description": "Shared Stripe building blocks for CoderizeDEV apps: the pinned API version, the client, a version guard for CI, webhook basics, readers for moved fields and a browser-safe card-fee gross-up",
+  "keywords": [
+    "stripe",
+    "coderize"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "directory": "packages/stripe"
+  },
+  "license": "UNLICENSED",
+  "author": "Coderize",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./fees": {
+      "types": "./fees.d.ts",
+      "default": "./fees.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./index.d.ts",
+  "bin": {
+    "coderize-stripe-check": "./cli.js"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "checkout.js",
+    "cli.js",
+    "client.js",
+    "dedupe.js",
+    "fees.d.ts",
+    "fees.js",
+    "guard.js",
+    "handler.js",
+    "index.d.ts",
+    "index.js",
+    "invoice.js",
+    "prismaStore.js",
+    "subscription.js",
+    "version.js",
+    "webhook.js"
+  ],
+  "scripts": {
+    "test": "vitest run && tsc -p test/types"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "stripe": "^23.2.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.4"
+  },
+  "peerDependencies": {
+    "stripe": "^23.0.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
