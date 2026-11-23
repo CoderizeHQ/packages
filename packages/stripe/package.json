@@ -1,18 +1,17 @@
 {
-  "name": "@coderize/stripe",
-  "version": "2.3.1",
-  "description": "Shared Stripe building blocks for CoderizeDEV apps: the pinned API version, the client, a version guard for CI, webhook basics, readers for moved fields and a browser-safe card-fee gross-up",
+  "name": "@coderizehq/stripe",
+  "version": "0.0.0",
+  "description": "Shared Stripe building blocks for CoderizeHQ apps: the pinned API version, the client, a version guard for CI, webhook basics, readers for moved fields and a browser-safe card-fee gross-up",
   "keywords": [
     "stripe",
-    "coderize"
+    "coderizehq"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
     "directory": "packages/stripe"
   },
-  "license": "UNLICENSED",
-  "author": "Coderize",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
@@ -45,7 +44,8 @@
     "prismaStore.js",
     "subscription.js",
     "version.js",
-    "webhook.js"
+    "webhook.js",
+    "LICENSE"
   ],
   "scripts": {
     "test": "vitest run && tsc -p test/types"
@@ -60,9 +60,10 @@
     "stripe": "^23.0.0"
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

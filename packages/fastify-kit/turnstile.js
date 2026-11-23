@@ -69,7 +69,7 @@ export async function verifyTurnstile(token, options = {}) {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       body,
-      signal: AbortSignal.timeout(timeoutMs)
+      signal: AbortSignal.timeout(timeoutMs),
     })
     if (!response.ok) {
       log?.error({ status: response.status }, 'turnstile: siteverify answered non-2xx')
@@ -129,7 +129,7 @@ export function requireTurnstile({ token = (request) => request.body?.turnstileT
       ...rest,
       ...(secret !== undefined && { secret }),
       remoteIp: request.ip,
-      log: request.log
+      log: request.log,
     })
     if (result.ok) return
     if (result.reason === 'NOT_CONFIGURED' || result.reason === 'UNREACHABLE') {
@@ -138,7 +138,7 @@ export function requireTurnstile({ token = (request) => request.body?.turnstileT
     throw new AppError(
       'We could not confirm this came from a browser. Please reload the page and try again.',
       403,
-      'CHALLENGE_FAILED'
+      'CHALLENGE_FAILED',
     )
   }
 }

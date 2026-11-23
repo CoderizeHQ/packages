@@ -34,7 +34,7 @@ async function rawJsonBodyPlugin(app, { contentTypes = ['application/json'], bod
       (request, body, done) => {
         request.rawBody = body
         parseJson(request, body, done)
-      }
+      },
     )
   }
 }
@@ -60,4 +60,4 @@ async function rawJsonBodyPlugin(app, { contentTypes = ['application/json'], bod
  * @param {import('fastify').FastifyInstance} app
  * @param {RawJsonBodyOptions} [options]
  */
-export const rawJsonBody = fp(rawJsonBodyPlugin, { fastify: '5.x', name: '@coderize/fastify-kit/raw-json-body' })
+export const rawJsonBody = fp(rawJsonBodyPlugin, { fastify: '5.x', name: '@coderizehq/fastify-kit/raw-json-body' })

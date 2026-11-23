@@ -6,7 +6,9 @@
     "lib": ["es2022", "dom", "dom.iterable"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "types": []
+    "types": [],
+    "allowJs": true,
+    "checkJs": true
   },
-  "files": ["consumer.ts"]
+  "files": ["consumer.js"]
 }

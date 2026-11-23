@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { centsToInput, formatCents, parseDollarsToCents } from '@coderize/format/money'
+import { centsToInput, formatCents, parseDollarsToCents } from '@coderizehq/format/money'
 
 // A small seeded generator, so a failure names an amount that reproduces.
 function* amounts(count, max, seed = 20261103) {
@@ -80,7 +80,7 @@ describe('parseDollarsToCents', () => {
     ['1,234,567.89', 123456789],
     ['  $ 40  ', 4000],
     ['1234.56', 123456],
-    ['0', 0]
+    ['0', 0],
   ])('reads %j as %i cents', (input, cents) => {
     expect(parseDollarsToCents(input)).toBe(cents)
   })
@@ -104,7 +104,7 @@ describe('parseDollarsToCents', () => {
     ['12-', 'a trailing sign'],
     ['$12$', 'two dollar signs'],
     ['-12', 'a negative, not allowed by default'],
-    ['99999999999999999', 'too large to be exact']
+    ['99999999999999999', 'too large to be exact'],
   ])('refuses %j (%s)', (input) => {
     expect(parseDollarsToCents(input)).toBeNull()
   })

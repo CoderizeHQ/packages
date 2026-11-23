@@ -30,7 +30,7 @@ export function canonicalUrl(pathOrUrl, site) {
     url = new URL(pathOrUrl, site)
   } catch {
     throw new TypeError(
-      `canonicalUrl could not resolve "${pathOrUrl}"${site ? ` against "${site}"` : ': pass the site URL for a path'}`
+      `canonicalUrl could not resolve "${pathOrUrl}"${site ? ` against "${site}"` : ': pass the site URL for a path'}`,
     )
   }
   url.pathname = stripTrailingSlash(url.pathname)

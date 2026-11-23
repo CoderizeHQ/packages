@@ -1,12 +1,12 @@
-# @coderize/email
+# @coderizehq/email
 
-How every CoderizeDEV app sends transactional email through Amazon SES: one switch that decides whether mail
+How every Coderize app sends transactional email through Amazon SES: one switch that decides whether mail
 really goes out, Simple content or a hand-built raw MIME message when there are attachments, errors that say
 whether a retry could help, logs that never carry a body in production, an HTML escaper, and the SNS signature
 check for the route that receives SES bounce and complaint notices.
 
 ```bash
-pnpm add @coderize/email
+pnpm add @coderizehq/email
 ```
 
 Peer dependency: `@aws-sdk/client-sesv2` 3 (3.1127 or later, the oldest the fleet runs). Each app already has it,
@@ -26,7 +26,7 @@ Nine fleet APIs and three Apps each had their own SES sender. They disagreed in 
 | SES `Simple.Attachments` PDFs opened blank (icrotary, July 2026)                         | Attachments always go as raw MIME                                           |
 | Failures thrown, returned or swallowed, with `id` in some apps and `messageId` in others | `send()` throws a classified `SendError`; `trySend()` never throws          |
 | 21 HTML escapers, two of them missing `"` or `'`                                         | `esc()`                                                                     |
-| gronetworking and coderize-dev accepted SNS certificates from `sns.s3.amazonaws.com`     | `@coderize/email/sns` accepts exactly `sns.<topic region>.amazonaws.com`    |
+| gronetworking and coderize-dev accepted SNS certificates from `sns.s3.amazonaws.com`     | `@coderizehq/email/sns` accepts exactly `sns.<topic region>.amazonaws.com`  |
 
 ## 1. The mailer
 
@@ -35,12 +35,12 @@ Build one per app, at startup, and reuse it. In a Fastify API it is a plugin:
 ```js
 // src/plugins/email.js
 import fp from 'fastify-plugin'
-import { createMailer } from '@coderize/email'
+import { createMailer } from '@coderizehq/email'
 
 export default fp(async function emailPlugin(app) {
   const mailer = createMailer({
     from: process.env.EMAIL_FROM ?? 'ThawWatch <alerts@thawwatch.com>',
-    logger: app.log
+    logger: app.log,
   })
   if (mailer.mode === 'log' && process.env.NODE_ENV === 'production') {
     app.log.error('EMAIL_PROVIDER is not ses: no email will be sent')
@@ -81,7 +81,7 @@ const result = await app.mailer.send({
   subject: 'Reset your password',
   text,
   html,
-  replyTo: 'support@thawwatch.com' // optional, as are cc, bcc, from, headers, attachments
+  replyTo: 'support@thawwatch.com', // optional, as are cc, bcc, from, headers, attachments
 })
 ```
 
@@ -133,8 +133,8 @@ await app.mailer.send({
   html,
   attachments: [
     { filename: `invoice-${invoice.number}.pdf`, content: pdfBuffer },
-    { filename: 'ticket.png', content: qrPng, contentType: 'image/png' }
-  ]
+    { filename: 'ticket.png', content: qrPng, contentType: 'image/png' },
+  ],
 })
 ```
 
@@ -234,7 +234,7 @@ deliverability question: see the `ses-deliverability` skill.
 ## 8. `esc()`
 
 ```js
-import { esc } from '@coderize/email'
+import { esc } from '@coderizehq/email'
 
 html: `<p>Hi ${esc(user.firstName)},</p><p>${esc(org.name)} invited you.</p>`
 ```
@@ -260,7 +260,7 @@ Or leave `EMAIL_PROVIDER` unset in the test env and assert on the `logged` resul
 `EMAIL_PROVIDER=ses` in a test without injecting `client`: the mailer would build a real one from whatever AWS
 credentials the machine has.
 
-## 10. SNS notices: `@coderize/email/sns`
+## 10. SNS notices: `@coderizehq/email/sns`
 
 The route that receives SES bounce, complaint and delivery events (or inbound mail) over an SNS HTTPS
 subscription is public, so nothing in a message is trusted until its signature checks out. No AWS SDK and no
@@ -268,7 +268,7 @@ Fastify inside, so a Lambda can use it too.
 
 ```js
 // src/routes/sesEvents.js
-import { confirmSubscription, verifySnsMessage } from '@coderize/email/sns'
+import { confirmSubscription, verifySnsMessage } from '@coderizehq/email/sns'
 
 export default async function sesEventRoutes(app) {
   // SNS posts JSON as text/plain.

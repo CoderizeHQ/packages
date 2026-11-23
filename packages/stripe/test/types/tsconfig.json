@@ -4,7 +4,9 @@
     "noEmit": true,
     "target": "es2022",
     "module": "nodenext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "allowJs": true,
+    "checkJs": true
   },
-  "files": ["consumer.ts"]
+  "files": ["consumer.js"]
 }

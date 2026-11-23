@@ -22,7 +22,7 @@ describe('isPreviewHost', () => {
 describe('robotsTxt', () => {
   it('allows everything and points at the sitemap by default', () => {
     expect(robotsTxt({ site: 'https://example.com' })).toBe(
-      'User-agent: *\nAllow: /\n\nSitemap: https://example.com/sitemap-index.xml\n'
+      'User-agent: *\nAllow: /\n\nSitemap: https://example.com/sitemap-index.xml\n',
     )
   })
 
@@ -54,7 +54,7 @@ describe('robotsTxt', () => {
 
   it('disallows listed paths and blocks listed agents', () => {
     expect(
-      robotsTxt({ site: 'https://example.com', disallow: ['/admin', '/api/'], blockAgents: ['CCBot', 'Bytespider'] })
+      robotsTxt({ site: 'https://example.com', disallow: ['/admin', '/api/'], blockAgents: ['CCBot', 'Bytespider'] }),
     ).toBe(
       [
         'User-agent: *',
@@ -68,8 +68,8 @@ describe('robotsTxt', () => {
         'Disallow: /',
         '',
         'Sitemap: https://example.com/sitemap-index.xml',
-        ''
-      ].join('\n')
+        '',
+      ].join('\n'),
     )
   })
 
@@ -81,7 +81,7 @@ describe('robotsTxt', () => {
 
   it('takes another sitemap path, or none', () => {
     expect(robotsTxt({ site: 'https://example.com', sitemap: '/sitemap.xml' })).toContain(
-      'Sitemap: https://example.com/sitemap.xml'
+      'Sitemap: https://example.com/sitemap.xml',
     )
     expect(robotsTxt({ sitemap: false })).toBe('User-agent: *\nAllow: /\n')
     expect(() => robotsTxt({})).toThrow(/site/)
@@ -94,7 +94,7 @@ describe('robotsEndpoint', () => {
     const response = GET({ site: new URL('https://example.com/') })
     expect(response.headers.get('content-type')).toBe('text/plain; charset=utf-8')
     expect(await response.text()).toBe(
-      'User-agent: *\nDisallow: /admin\n\nSitemap: https://example.com/sitemap-index.xml\n'
+      'User-agent: *\nDisallow: /admin\n\nSitemap: https://example.com/sitemap-index.xml\n',
     )
   })
 })

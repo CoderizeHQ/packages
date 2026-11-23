@@ -17,7 +17,7 @@ const SUBPATHS = {
     'utcDay',
     'utcToZonedWallTime',
     'zonedParts',
-    'zonedWallTimeToUtc'
+    'zonedWallTimeToUtc',
   ],
   money: ['centsToInput', 'formatCents', 'parseDollarsToCents'],
   phone: [
@@ -30,25 +30,25 @@ const SUBPATHS = {
     'phoneHref',
     'phoneNeedsFixing',
     'phoneStatus',
-    'samePhone'
+    'samePhone',
   ],
-  slug: ['slugify']
+  slug: ['slugify'],
 }
 
 // Imported by name through the package's own exports map, as an app would.
 const MODULES = {
-  csv: () => import('@coderize/format/csv'),
-  date: () => import('@coderize/format/date'),
-  money: () => import('@coderize/format/money'),
-  phone: () => import('@coderize/format/phone'),
-  slug: () => import('@coderize/format/slug')
+  csv: () => import('@coderizehq/format/csv'),
+  date: () => import('@coderizehq/format/date'),
+  money: () => import('@coderizehq/format/money'),
+  phone: () => import('@coderizehq/format/phone'),
+  slug: () => import('@coderizehq/format/slug'),
 }
 
 const read = (file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8')
 const sorted = (list) => [...list].sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
 
 describe('package exports', () => {
-  it.each(Object.entries(SUBPATHS))('serves @coderize/format/%s', async (name, expected) => {
+  it.each(Object.entries(SUBPATHS))('serves @coderizehq/format/%s', async (name, expected) => {
     const mod = await MODULES[name]()
     expect(sorted(Object.keys(mod))).toEqual(sorted(expected))
   })

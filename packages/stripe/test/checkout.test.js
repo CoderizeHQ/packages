@@ -6,7 +6,7 @@ import { checkoutShipping } from '../index.js'
 
 const shipTo = {
   name: 'Test Recipient',
-  address: { line1: '1 Test St', line2: null, city: 'Testville', state: 'MI', postal_code: '00000', country: 'US' }
+  address: { line1: '1 Test St', line2: null, city: 'Testville', state: 'MI', postal_code: '00000', country: 'US' },
 }
 const billing = { name: 'Billing Name', address: { line1: '2 Other St', city: 'Elsewhere', country: 'US' } }
 

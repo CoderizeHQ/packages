@@ -8,7 +8,7 @@ import {
   isSaneRequestId,
   loggerOptions,
   REQUEST_ID_HEADER,
-  requestIdOptions
+  requestIdOptions,
 } from '../index.js'
 import { appWithLogs } from './helpers.js'
 
@@ -24,7 +24,7 @@ afterEach(async () => {
 async function build({ options, echo } = {}) {
   app = Fastify({ ...requestIdOptions(options) })
   app.setErrorHandler(
-    createErrorHandler({ body: ({ message, code }, request) => ({ error: message, code, id: request.id }) })
+    createErrorHandler({ body: ({ message, code }, request) => ({ error: message, code, id: request.id }) }),
   )
   await app.register(echoRequestId, echo)
   app.get('/id', async (request) => ({ id: request.id }))
@@ -41,7 +41,7 @@ describe('isSaneRequestId', () => {
     'contract-request-0001',
     'a',
     'trace.span:01_x',
-    'x'.repeat(128)
+    'x'.repeat(128),
   ])('keeps %s', (value) => {
     expect(isSaneRequestId(value)).toBe(true)
   })
@@ -58,7 +58,7 @@ describe('isSaneRequestId', () => {
     'line\nbreak',
     undefined,
     42,
-    ['a', 'b']
+    ['a', 'b'],
   ])('refuses %j', (value) => {
     expect(isSaneRequestId(value)).toBe(false)
   })
@@ -90,14 +90,14 @@ describe('requestIdOptions', () => {
       const res = await app.inject({ url: '/id', headers: { 'x-request-id': value } })
       expect(res.json().id).toMatch(UUID)
       expect(res.headers['x-request-id']).toBe(res.json().id)
-    }
+    },
   )
 
   it('reads another header, and takes its own generator', async () => {
     let n = 0
     await build({ options: { header: 'CF-Ray', generate: () => `gen-${++n}` } })
     expect((await app.inject({ url: '/id', headers: { 'cf-ray': '8f1e2d3c4b5a6978-ORD' } })).json().id).toBe(
-      '8f1e2d3c4b5a6978-ORD'
+      '8f1e2d3c4b5a6978-ORD',
     )
     expect((await app.inject({ url: '/id', headers: { 'x-request-id': 'ignored-here' } })).json().id).toBe('gen-1')
   })

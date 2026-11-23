@@ -56,7 +56,7 @@ describe('healthRoutes', () => {
     const secret = 'postgresql://neondb_owner:hunter2@ep-x.neon.tech/neondb'
     const error = Object.assign(new Error(`Can't reach database server at ${secret}`), {
       name: 'PrismaClientInitializationError',
-      errorCode: 'P1001'
+      errorCode: 'P1001',
     })
     const app = await build({ checkDatabase: () => Promise.reject(error) })
     const response = await app.inject('/health/ready')

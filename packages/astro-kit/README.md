@@ -1,37 +1,37 @@
-# @coderize/astro-kit
+# @coderizehq/astro-kit
 
-The head and crawl behaviour every CoderizeDEV Astro site carries a copy of: the canonical URL in the fleet's
+The head and crawl behaviour every Coderize Astro site carries a copy of: the canonical URL in the fleet's
 no-trailing-slash form, Open Graph and Twitter tags, the `@astrojs/sitemap` options, robots.txt, JSON-LD output
 and builders, and the Google Tag Manager loader with an event helper. No styles and no visual components: a
 client's design is bespoke, so this package only writes `<head>` tags, config and data.
 
 ```bash
-pnpm add @coderize/astro-kit
+pnpm add @coderizehq/astro-kit
 ```
 
 Peer dependency: `astro` 7. Plain JavaScript (ESM). Each piece works on its own, so a site can move onto them
 one at a time.
 
-| Import                                               | What it is                                                                       |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `@coderize/astro-kit/SeoHead.astro`                  | title, description, canonical, `og:*`, `twitter:*`, robots noindex               |
-| `@coderize/astro-kit/sitemap`                        | `sitemapOptions()` for `@astrojs/sitemap` (config time only, reads `dist`)       |
-| `@coderize/astro-kit` `robotsEndpoint`               | robots.txt as an endpoint                                                        |
-| `@coderize/astro-kit/JsonLd.astro`                   | one escaped `<script type="application/ld+json">`                                |
-| `@coderize/astro-kit` builders                       | `organization`, `localBusiness`, `breadcrumbList`, `faqPage`, `event`, `website` |
-| `@coderize/astro-kit/Gtm.astro`, `GtmNoscript.astro` | the GTM loader and its noscript iframe, production builds only                   |
-| `@coderize/astro-kit/track`, or the main entry       | `track(event, params)`: one `dataLayer.push`                                     |
+| Import                                                 | What it is                                                                       |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| `@coderizehq/astro-kit/SeoHead.astro`                  | title, description, canonical, `og:*`, `twitter:*`, robots noindex               |
+| `@coderizehq/astro-kit/sitemap`                        | `sitemapOptions()` for `@astrojs/sitemap` (config time only, reads `dist`)       |
+| `@coderizehq/astro-kit` `robotsEndpoint`               | robots.txt as an endpoint                                                        |
+| `@coderizehq/astro-kit/JsonLd.astro`                   | one escaped `<script type="application/ld+json">`                                |
+| `@coderizehq/astro-kit` builders                       | `organization`, `localBusiness`, `breadcrumbList`, `faqPage`, `event`, `website` |
+| `@coderizehq/astro-kit/Gtm.astro`, `GtmNoscript.astro` | the GTM loader and its noscript iframe, production builds only                   |
+| `@coderizehq/astro-kit/track`, or the main entry       | `track(event, params)`: one `dataLayer.push`                                     |
 
 ## All together
 
 ```astro
 ---
 // src/layout/Base.astro
-import SeoHead from '@coderize/astro-kit/SeoHead.astro'
-import JsonLd from '@coderize/astro-kit/JsonLd.astro'
-import Gtm from '@coderize/astro-kit/Gtm.astro'
-import GtmNoscript from '@coderize/astro-kit/GtmNoscript.astro'
-import { organization, website } from '@coderize/astro-kit'
+import SeoHead from '@coderizehq/astro-kit/SeoHead.astro'
+import JsonLd from '@coderizehq/astro-kit/JsonLd.astro'
+import Gtm from '@coderizehq/astro-kit/Gtm.astro'
+import GtmNoscript from '@coderizehq/astro-kit/GtmNoscript.astro'
+import { organization, website } from '@coderizehq/astro-kit'
 import { site } from '@/config/site.js'
 
 const { title, description = site.description, image, noindex = false } = Astro.props
@@ -54,7 +54,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID
     <JsonLd
       data={[
         organization({ name: site.name, url: site.url, logo: `${site.url}/logo.png` }),
-        website({ name: site.name, url: site.url, publisher: `${site.url}/#organization` })
+        website({ name: site.name, url: site.url, publisher: `${site.url}/#organization` }),
       ]}
     />
   </head>
@@ -69,18 +69,18 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID
 // astro.config.mjs
 import { defineConfig } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
-import { sitemapOptions } from '@coderize/astro-kit/sitemap'
+import { sitemapOptions } from '@coderizehq/astro-kit/sitemap'
 
 export default defineConfig({
   site: 'https://example.com',
   trailingSlash: 'ignore',
-  integrations: [sitemap(sitemapOptions({ exclude: ['/admin/*'] }))]
+  integrations: [sitemap(sitemapOptions({ exclude: ['/admin/*'] }))],
 })
 ```
 
 ```js
 // src/pages/robots.txt.js (and delete public/robots.txt)
-import { robotsEndpoint } from '@coderize/astro-kit'
+import { robotsEndpoint } from '@coderizehq/astro-kit'
 
 export const GET = robotsEndpoint()
 ```
@@ -139,8 +139,8 @@ by a meta tag in the build: the same build later serves the real domain.
 sitemap(
   sitemapOptions({
     exclude: ['/login', '/admin/*', /^\/drafts\//],
-    lastmod: 'build'
-  })
+    lastmod: 'build',
+  }),
 )
 ```
 
@@ -170,7 +170,7 @@ Don't flip a Recipe B site to `'ignore'` while adopting this; that is a separate
 
 ```js
 // src/pages/robots.txt.js
-import { robotsEndpoint } from '@coderize/astro-kit'
+import { robotsEndpoint } from '@coderizehq/astro-kit'
 
 export const GET = robotsEndpoint({ disallow: ['/admin'], blockAgents: ['CCBot', 'Bytespider'] })
 ```
@@ -212,8 +212,8 @@ nothing else changes either way.
 
 ```astro
 ---
-import JsonLd from '@coderize/astro-kit/JsonLd.astro'
-import { breadcrumbList, localBusiness } from '@coderize/astro-kit'
+import JsonLd from '@coderizehq/astro-kit/JsonLd.astro'
+import { breadcrumbList, localBusiness } from '@coderizehq/astro-kit'
 ---
 
 <JsonLd data={localBusiness({ type: 'InsuranceAgency', name: site.name, url: site.url, address: site.address })} />
@@ -222,8 +222,8 @@ import { breadcrumbList, localBusiness } from '@coderize/astro-kit'
     site: Astro.site,
     items: [
       { name: 'Home', path: '/' },
-      { name: 'Services', path: '/services' }
-    ]
+      { name: 'Services', path: '/services' },
+    ],
   })}
 />
 ```
@@ -272,7 +272,7 @@ included (below).
 ### `track(event, params)`
 
 ```js
-import { track } from '@coderize/astro-kit/track'
+import { track } from '@coderizehq/astro-kit/track'
 
 track('click_phone', { link_location: 'header' })
 ```

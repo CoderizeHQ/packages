@@ -27,7 +27,7 @@ const REGION = /^[a-z]{2}(-[a-z]+)+-\d$/
 const FIELDS = {
   Notification: ['Message', 'MessageId', 'Subject', 'Timestamp', 'TopicArn', 'Type'],
   SubscriptionConfirmation: ['Message', 'MessageId', 'SubscribeURL', 'Timestamp', 'Token', 'TopicArn', 'Type'],
-  UnsubscribeConfirmation: ['Message', 'MessageId', 'SubscribeURL', 'Timestamp', 'Token', 'TopicArn', 'Type']
+  UnsubscribeConfirmation: ['Message', 'MessageId', 'SubscribeURL', 'Timestamp', 'Token', 'TopicArn', 'Type'],
 }
 const ALGORITHM = { 1: 'RSA-SHA1', 2: 'RSA-SHA256' }
 const TIMEOUT_MS = 5000

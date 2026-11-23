@@ -1,4 +1,6 @@
-# @coderize/email
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/email` at c60309c) and renamed `@coderizehq/email`. The entries from 0.1.1 down are `@coderize/email`'s, released from that repo with Changesets; its git history stays there.
 
 ## 0.1.1
 

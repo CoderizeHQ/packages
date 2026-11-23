@@ -32,7 +32,7 @@ export const INTERNAL_ERROR_MESSAGE = 'Internal server error'
 /** Prisma known-request codes that mean something to the person who asked. */
 const KNOWN_REQUEST = {
   P2025: { statusCode: 404, message: 'Not found', code: 'NOT_FOUND' },
-  P2002: { statusCode: 409, message: 'Already exists', code: 'CONFLICT' }
+  P2002: { statusCode: 409, message: 'Already exists', code: 'CONFLICT' },
 }
 
 // Prisma colours its messages when it thinks it is on a terminal, which splits the line we match.
@@ -94,7 +94,7 @@ export function createErrorHandler({
   captureException = () => {},
   validationStatusCode = 422,
   body = defaultBody,
-  errorCodes = {}
+  errorCodes = {},
 } = {}) {
   const mapped = compileErrorCodes(errorCodes)
   const answer = (request, reply, statusCode, message, code) =>
@@ -188,7 +188,7 @@ export function errorFacts(error) {
     name: typeof error.name === 'string' ? error.name : undefined,
     code: typeof error.code === 'string' || typeof error.code === 'number' ? error.code : undefined,
     statusCode: Number.isInteger(error.statusCode) ? error.statusCode : undefined,
-    frame: firstAppFrame(error)
+    frame: firstAppFrame(error),
   }
   if (dbError) facts.database = databaseFacts(dbError)
   return facts
@@ -225,7 +225,7 @@ function databaseFacts(error) {
     kind: adapter?.kind,
     model: meta.modelName,
     target: meta.target ?? adapter?.constraint,
-    invocation: message.match(INVOCATION)?.[1]
+    invocation: message.match(INVOCATION)?.[1],
   }
 }
 

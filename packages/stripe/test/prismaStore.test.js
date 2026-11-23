@@ -43,7 +43,7 @@ describe('prismaEventStore', () => {
     await store.seen('evt_1')
     expect(delegate.findUnique).toHaveBeenCalledWith({
       where: { stripeEventId: 'evt_1' },
-      select: { stripeEventId: true }
+      select: { stripeEventId: true },
     })
   })
 

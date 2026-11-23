@@ -20,7 +20,7 @@ export class FormClientConfigError extends Error {
 export function requireEndpoint(endpoint, caller) {
   if (typeof endpoint !== 'string' || !endpoint.trim()) {
     throw new FormClientConfigError(
-      `${caller}: endpoint is missing. Pass import.meta.env.PUBLIC_FORM_API_URL and check that the site's build sets it.`
+      `${caller}: endpoint is missing. Pass import.meta.env.PUBLIC_FORM_API_URL and check that the site's build sets it.`,
     )
   }
   try {

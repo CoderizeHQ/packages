@@ -5,13 +5,13 @@ const native = vi.hoisted(() => ({ platform: false, impact: null }))
 vi.mock('@capacitor/core', () => ({ Capacitor: { isNativePlatform: () => native.platform } }))
 vi.mock('@capacitor/haptics', () => ({
   Haptics: { impact: (...args) => native.impact(...args) },
-  ImpactStyle: { Light: 'LIGHT', Medium: 'MEDIUM', Heavy: 'HEAVY' }
+  ImpactStyle: { Light: 'LIGHT', Medium: 'MEDIUM', Heavy: 'HEAVY' },
 }))
 
 // The module decides native or web once, when it loads, as it does in the game.
 const load = async () => {
   vi.resetModules()
-  return (await import('@coderize/game-kit/haptics')).buzz
+  return (await import('@coderizehq/game-kit/haptics')).buzz
 }
 
 describe('buzz', () => {

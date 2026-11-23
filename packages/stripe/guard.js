@@ -49,14 +49,14 @@ export function checkStripeVersion({ Stripe: StripeClass = Stripe } = {}) {
     id: 'pin-format',
     ok: FULL_VERSION.test(STRIPE_API_VERSION),
     label: 'the pin is a full dated version with its release train',
-    detail: { pinned: STRIPE_API_VERSION }
+    detail: { pinned: STRIPE_API_VERSION },
   })
 
   checks.push({
     id: 'sdk-default',
     ok: sdkDefault === STRIPE_API_VERSION || reviewed.includes(sdkDefault),
     label: 'the installed stripe SDK defaults to the pin, or to a version this release has reviewed',
-    detail: { sdk: sdkVersion, sdkDefault, pinned: STRIPE_API_VERSION, reviewed }
+    detail: { sdk: sdkVersion, sdkDefault, pinned: STRIPE_API_VERSION, reviewed },
   })
 
   let sent
@@ -70,7 +70,7 @@ export function checkStripeVersion({ Stripe: StripeClass = Stripe } = {}) {
     id: 'client-sends-pin',
     ok: sent === STRIPE_API_VERSION,
     label: 'a client from createStripe sends the pin',
-    detail: error ? { pinned: STRIPE_API_VERSION, error } : { pinned: STRIPE_API_VERSION, sent }
+    detail: error ? { pinned: STRIPE_API_VERSION, error } : { pinned: STRIPE_API_VERSION, sent },
   })
 
   return { ok: checks.every((c) => c.ok), sdkVersion, sdkDefault, checks }

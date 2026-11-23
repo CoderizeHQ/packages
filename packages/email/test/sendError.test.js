@@ -10,7 +10,7 @@ describe('isTransientAwsError', () => {
     ['LimitExceededException', 400],
     ['InternalFailure', 500],
     ['ServiceUnavailable', 503],
-    ['SomethingNew', 502]
+    ['SomethingNew', 502],
   ])('treats %s (HTTP %i) as transient', (name, status) => {
     expect(isTransientAwsError(awsError(name, { status }))).toBe(true)
   })
@@ -29,7 +29,7 @@ describe('isTransientAwsError', () => {
     'MessageRejected',
     'MailFromDomainNotVerifiedException',
     'NotFoundException',
-    'BadRequestException'
+    'BadRequestException',
   ])('treats %s as permanent', (name) => {
     expect(isTransientAwsError(awsError(name, { status: name === 'AccessDeniedException' ? 403 : 400 }))).toBe(false)
   })
@@ -47,7 +47,7 @@ describe('SendError', () => {
 describe('esc', () => {
   it('escapes the five HTML-significant characters', () => {
     expect(esc(`<a href="x" title='y'>Tom & Jerry</a>`)).toBe(
-      '&lt;a href=&quot;x&quot; title=&#39;y&#39;&gt;Tom &amp; Jerry&lt;/a&gt;'
+      '&lt;a href=&quot;x&quot; title=&#39;y&#39;&gt;Tom &amp; Jerry&lt;/a&gt;',
     )
   })
 

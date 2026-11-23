@@ -28,9 +28,9 @@ export function useFormGuard() {
       tabIndex: -1,
       autoComplete: 'off',
       'aria-hidden': true,
-      className: 'hidden'
+      className: 'hidden',
     },
     guard,
-    guardFields: guard.fields
+    guardFields: guard.fields,
   }
 }

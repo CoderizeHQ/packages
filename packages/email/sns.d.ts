@@ -1,4 +1,4 @@
-// Types for `@coderize/email/sns`. Hand-written to match sns.js; test/types/consumer.ts type-checks them.
+// Types for `@coderizehq/email/sns`. Hand-written to match sns.js; test/types/consumer.ts type-checks them.
 import type { KeyObject } from 'node:crypto'
 
 /** An SNS message as posted to an HTTPS subscription (JSON, sent as text/plain). */
@@ -42,5 +42,5 @@ export declare function verifySnsMessage(message: unknown, options?: VerifySnsOp
 /** GETs the SubscribeURL of a verified SubscriptionConfirmation. Throws when the URL is not SNS's. */
 export declare function confirmSubscription(
   message: SnsMessage | Record<string, unknown>,
-  options?: { fetch?: typeof fetch }
+  options?: { fetch?: typeof fetch },
 ): Promise<{ ok: boolean; status: number }>

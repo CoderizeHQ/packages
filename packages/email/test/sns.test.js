@@ -8,8 +8,8 @@ import {
   isSnsUrl,
   signingString,
   topicRegion,
-  verifySnsMessage
-} from '@coderize/email/sns'
+  verifySnsMessage,
+} from '@coderizehq/email/sns'
 
 const TOPIC = 'arn:aws:sns:us-east-1:123456789012:coderize-ses-events'
 const US_EAST_1 = { region: 'us-east-1', pem: true }
@@ -34,7 +34,7 @@ const notification = (overrides = {}) => ({
   Message: '{"eventType":"Bounce","mail":{"messageId":"msg-1"}}',
   Timestamp: '2026-11-03T12:00:00.000Z',
   SigningCertURL: CERT_URL,
-  ...overrides
+  ...overrides,
 })
 
 const confirmation = (overrides = {}) => ({
@@ -46,7 +46,7 @@ const confirmation = (overrides = {}) => ({
   SubscribeURL: SUBSCRIBE_URL,
   Timestamp: '2026-11-03T12:00:00.000Z',
   SigningCertURL: CERT_URL,
-  ...overrides
+  ...overrides,
 })
 
 function certFetcher() {
@@ -76,7 +76,7 @@ function makeCertificate({ notBefore, notAfter }) {
     name,
     seq(time(notBefore), time(notAfter)),
     name,
-    publicKey.export({ type: 'spki', format: 'der' })
+    publicKey.export({ type: 'spki', format: 'der' }),
   )
   const der = seq(tbs, sha256WithRsa, tlv(0x03, Buffer.from([0]), signBytes('sha256', tbs, privateKey)))
   return `-----BEGIN CERTIFICATE-----\n${der.toString('base64').replace(/.{64}/g, '$&\n')}\n-----END CERTIFICATE-----\n`
@@ -113,7 +113,7 @@ describe('the host rule', () => {
     'https://evil.example/sns.us-east-1.amazonaws.com/a.pem',
     'https://sns.cn-north-1.amazonaws.com.cn/a.pem',
     'https://sns.us-east-1.amazonaws.com/a.txt',
-    'not a url'
+    'not a url',
   ])('rejects the look-alike %s', (url) => {
     expect(isSnsUrl(url, US_EAST_1)).toBe(false)
   })
@@ -128,10 +128,10 @@ describe('signingString', () => {
   it('signs the notification fields in order, leaving out an absent Subject', () => {
     expect(signingString(notification())).toBe(
       'Message\n{"eventType":"Bounce","mail":{"messageId":"msg-1"}}\nMessageId\nsns-1\n' +
-        `Timestamp\n2026-11-03T12:00:00.000Z\nTopicArn\n${TOPIC}\nType\nNotification\n`
+        `Timestamp\n2026-11-03T12:00:00.000Z\nTopicArn\n${TOPIC}\nType\nNotification\n`,
     )
     expect(signingString(notification({ Subject: 'Amazon SES Email Event Notification' }))).toContain(
-      'Subject\nAmazon SES Email Event Notification\nTimestamp'
+      'Subject\nAmazon SES Email Event Notification\nTimestamp',
     )
   })
 
@@ -160,7 +160,7 @@ describe('verifySnsMessage', () => {
   it('refuses a certificate for a different region than the topic', async () => {
     const { fetchCert, calls } = certFetcher()
     const message = sign(
-      notification({ SigningCertURL: 'https://sns.eu-west-1.amazonaws.com/SimpleNotificationService-abc123.pem' })
+      notification({ SigningCertURL: 'https://sns.eu-west-1.amazonaws.com/SimpleNotificationService-abc123.pem' }),
     )
     expect(await verifySnsMessage(message, { fetchCert })).toBe(false)
     expect(calls).toEqual([])
@@ -171,7 +171,7 @@ describe('verifySnsMessage', () => {
     for (const SubscribeURL of [
       'https://sns.s3.amazonaws.com/?Action=ConfirmSubscription&Token=tok',
       'https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&Token=tok',
-      'http://169.254.169.254/latest/meta-data/'
+      'http://169.254.169.254/latest/meta-data/',
     ]) {
       expect(await verifySnsMessage(sign(confirmation({ SubscribeURL })), { fetchCert }), SubscribeURL).toBe(false)
     }
@@ -212,7 +212,7 @@ describe('fetchSigningCert', () => {
     expect(key.asymmetricKeyType).toBe('rsa')
     expect(fetch).toHaveBeenCalledWith(
       url,
-      expect.objectContaining({ redirect: 'error', signal: expect.any(AbortSignal) })
+      expect.objectContaining({ redirect: 'error', signal: expect.any(AbortSignal) }),
     )
     await fetchSigningCert(url, { fetch })
     expect(fetch).toHaveBeenCalledOnce()
@@ -228,26 +228,26 @@ describe('fetchSigningCert', () => {
   it('refuses an expired certificate and one not yet valid', async () => {
     const expired = makeCertificate({
       notBefore: new Date(Date.now() - 400 * DAY),
-      notAfter: new Date(Date.now() - DAY)
+      notAfter: new Date(Date.now() - DAY),
     })
     const future = makeCertificate({
       notBefore: new Date(Date.now() + DAY),
-      notAfter: new Date(Date.now() + 400 * DAY)
+      notAfter: new Date(Date.now() + 400 * DAY),
     })
     await expect(
-      fetchSigningCert('https://sns.us-east-1.amazonaws.com/expired.pem', { fetch: fakeFetch(expired) })
+      fetchSigningCert('https://sns.us-east-1.amazonaws.com/expired.pem', { fetch: fakeFetch(expired) }),
     ).rejects.toThrow(/not currently valid/)
     await expect(
-      fetchSigningCert('https://sns.us-east-1.amazonaws.com/future.pem', { fetch: fakeFetch(future) })
+      fetchSigningCert('https://sns.us-east-1.amazonaws.com/future.pem', { fetch: fakeFetch(future) }),
     ).rejects.toThrow(/not currently valid/)
   })
 
   it('refuses an HTTP error and a body that is not a certificate', async () => {
     await expect(
-      fetchSigningCert('https://sns.us-east-1.amazonaws.com/404.pem', { fetch: fakeFetch('', { status: 404 }) })
+      fetchSigningCert('https://sns.us-east-1.amazonaws.com/404.pem', { fetch: fakeFetch('', { status: 404 }) }),
     ).rejects.toThrow(/HTTP 404/)
     await expect(
-      fetchSigningCert('https://sns.us-east-1.amazonaws.com/junk.pem', { fetch: fakeFetch('<html>') })
+      fetchSigningCert('https://sns.us-east-1.amazonaws.com/junk.pem', { fetch: fakeFetch('<html>') }),
     ).rejects.toThrow()
   })
 })
@@ -258,7 +258,7 @@ describe('confirmSubscription', () => {
     expect(await confirmSubscription(confirmation(), { fetch })).toEqual({ ok: true, status: 200 })
     expect(fetch).toHaveBeenCalledWith(
       SUBSCRIBE_URL,
-      expect.objectContaining({ redirect: 'error', signal: expect.any(AbortSignal) })
+      expect.objectContaining({ redirect: 'error', signal: expect.any(AbortSignal) }),
     )
   })
 
@@ -267,10 +267,10 @@ describe('confirmSubscription', () => {
     for (const SubscribeURL of [
       'https://sns.s3.amazonaws.com/?Action=ConfirmSubscription&Token=tok',
       'https://sns.eu-west-1.amazonaws.com/?Action=ConfirmSubscription&Token=tok',
-      'http://169.254.169.254/latest/meta-data/'
+      'http://169.254.169.254/latest/meta-data/',
     ]) {
       await expect(confirmSubscription(confirmation({ SubscribeURL }), { fetch }), SubscribeURL).rejects.toThrow(
-        /not the SNS endpoint/
+        /not the SNS endpoint/,
       )
     }
     await expect(confirmSubscription(notification(), { fetch })).rejects.toThrow(/not a SubscriptionConfirmation/)

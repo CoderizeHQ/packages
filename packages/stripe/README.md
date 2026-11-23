@@ -1,12 +1,12 @@
-# @coderize/stripe
+# @coderizehq/stripe
 
-How every CoderizeDEV app talks to Stripe: one pinned API version, the client built with it, a CI guard that
+How every Coderize app talks to Stripe: one pinned API version, the client built with it, a CI guard that
 fails when a `stripe` upgrade would move it, the webhook basics (raw-body signature check, once-only
 processing, routing by type), readers for the fields Stripe has moved between API versions, and a browser-safe
 card-fee gross-up so a checkout page shows exactly the fee the API charges.
 
 ```bash
-pnpm add @coderize/stripe
+pnpm add @coderizehq/stripe
 ```
 
 Peer dependency: `stripe` 23. Each app keeps `stripe` as its own dependency, so this package never brings a
@@ -91,7 +91,7 @@ Replace the app's `new Stripe(key, { apiVersion })` with `createStripe`, and del
 ```js
 // src/plugins/stripe.js
 import fp from 'fastify-plugin'
-import { createStripe } from '@coderize/stripe'
+import { createStripe } from '@coderizehq/stripe'
 
 export default fp(async function stripePlugin(app) {
   app.decorate('stripe', createStripe(process.env.STRIPE_SECRET_KEY))
@@ -147,7 +147,7 @@ model StripeEvent {
 
 ```js
 // src/routes/stripeWebhook.js (Fastify)
-import { handleStripeWebhook } from '@coderize/stripe'
+import { handleStripeWebhook } from '@coderizehq/stripe'
 
 export default async function stripeWebhookRoutes(app) {
   app.addContentTypeParser('application/json', { parseAs: 'buffer' }, (request, body, done) => done(null, body))
@@ -161,7 +161,7 @@ export default async function stripeWebhookRoutes(app) {
       secret: [process.env.STRIPE_WEBHOOK_SECRET, process.env.STRIPE_WEBHOOK_SECRET_NEXT],
       prisma: app.prisma,
       handlers,
-      log: request.log
+      log: request.log,
     })
     return reply.code(status).send(body)
   })
@@ -172,7 +172,7 @@ const handlers = {
   'invoice.paid': async (event, { tx, after }) => {
     const payment = await tx.payment.create({ data: { stripeInvoiceId: event.data.object.id /* ... */ } })
     after(() => sendReceipt(payment))
-  }
+  },
 }
 ```
 
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
     signature: request.headers.get('stripe-signature'),
     secret: [process.env.STRIPE_WEBHOOK_SECRET!, process.env.STRIPE_WEBHOOK_SECRET_NEXT!],
     prisma,
-    handlers
+    handlers,
   })
   return Response.json(body, { status })
 }
@@ -205,7 +205,7 @@ When a handler throws, it **rejects** rather than resolving, with a `StripeWebho
 (`statusCode` 500, `code` `HANDLER_FAILED`, `eventId`, `eventType`, and the handler's error as `cause`): the
 transaction rolls back with the event id, the framework answers 500 and reports the error, and Stripe's retry
 runs the handler again. Don't catch it. The wrapper is what keeps it a 500: an app's error handler answers
-Prisma's P2025 and P2002 with 404 and 409 (`@coderize/fastify-kit` does on ordinary routes) and an
+Prisma's P2025 and P2002 with 404 and 409 (`@coderizehq/fastify-kit` does on ordinary routes) and an
 `AppError` with its 4xx, and Stripe takes a 4xx as final, so the event would be dropped and nothing reported.
 It is deliberately not a `StripeWebhookError`, so a route that catches those to send their status can't
 swallow it. A
@@ -291,7 +291,7 @@ intent. Both prefer the payment with `status: 'paid'` over failed attempts. A nu
 `checkoutShipping` returns null when nothing was collected. An app whose own copy returned `{}` writes
 `checkoutShipping(session) ?? {}` to keep that behaviour.
 
-### 5. Covering the card fee (`@coderize/stripe/fees`)
+### 5. Covering the card fee (`@coderizehq/stripe/fees`)
 
 When the payer covers the processing fee, the page that shows the fee and the API that charges it must compute
 the same number. icrotary had them apart, the page in float dollars and the API in integer cents, and 387 of the
@@ -300,12 +300,12 @@ one function instead:
 
 ```js
 // the checkout page (browser) and the checkout route (API) alike
-import { cardFeeCents, grossUpForCardFee } from '@coderize/stripe/fees'
+import { cardFeeCents, grossUpForCardFee } from '@coderizehq/stripe/fees'
 
 const { feeCents, totalCents } = grossUpForCardFee(subtotalCents) // 5000 -> 181 and 5181
 ```
 
-`@coderize/stripe/fees` imports nothing, so a Vite or Astro page loads it without the Stripe SDK or any Node
+`@coderizehq/stripe/fees` imports nothing, so a Vite or Astro page loads it without the Stripe SDK or any Node
 built-in. The main entry does not re-export it: import it from `./fees` everywhere.
 
 | Export                                              | What it is                                                                           |
@@ -334,10 +334,10 @@ When the guard fails on a new `stripe` release:
 1. Find the new default: `node -p "require('stripe/package.json').version"` and the guard's `sdkDefault`.
 2. Read Stripe's changelog for every version between the pin and the new default, and grep the fleet for each
    breaking change: write params, read fields, webhook payload shapes.
-3. Add an entry to `REVIEWED_SDK_DEFAULTS` in `version.js` with the date, the decision and what you found, add a
-   **minor** changeset, and release. Apps pick it up and their guard goes green with the pin unchanged.
+3. Add an entry to `REVIEWED_SDK_DEFAULTS` in `version.js` with the date, the decision and what you found, and
+   release it as a **minor** (a `feat:` PR). Apps pick it up and their guard goes green with the pin unchanged.
 4. Moving the pin itself is a **major** release: change `STRIPE_API_VERSION`, mark the entry `adopted`, and say
-   in the changeset what each app has to change. Every app also moves its webhook endpoints to the new version,
+   in the PR (`feat!:`) what each app has to change. Every app also moves its webhook endpoints to the new version,
    since payloads follow the endpoint's version.
 
 ## The plan

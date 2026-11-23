@@ -13,12 +13,12 @@ const MAIN_ENTRY_FILES = [
   'requestId.js',
   'server.js',
   'trustProxy.js',
-  'turnstile.js'
+  'turnstile.js',
 ]
 
 describe('package exports', () => {
   it('serves everything but Sentry and the security preset from the main entry', async () => {
-    const kit = await import('@coderize/fastify-kit')
+    const kit = await import('@coderizehq/fastify-kit')
     expect(Object.keys(kit).sort()).toEqual([
       'AppError',
       'INTERNAL_ERROR_MESSAGE',
@@ -41,22 +41,22 @@ describe('package exports', () => {
       'requireTurnstile',
       'startServer',
       'trustCaddyHop',
-      'verifyTurnstile'
+      'verifyTurnstile',
     ])
   })
 
   it('serves Sentry from its own entry', async () => {
-    const sentry = await import('@coderize/fastify-kit/sentry')
+    const sentry = await import('@coderizehq/fastify-kit/sentry')
     expect(Object.keys(sentry).sort()).toEqual(['captureException', 'dataCollection', 'initSentry'])
   })
 
   it('serves the security preset from its own entry', async () => {
-    const security = await import('@coderize/fastify-kit/security')
+    const security = await import('@coderizehq/fastify-kit/security')
     expect(Object.keys(security).sort()).toEqual([
       'corsMethods',
       'parseOrigins',
       'rateLimitDefaults',
-      'securityPlugins'
+      'securityPlugins',
     ])
   })
 

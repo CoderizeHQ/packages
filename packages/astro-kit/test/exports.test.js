@@ -6,7 +6,7 @@ const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url
 
 describe('package exports', () => {
   it('serves the helpers from the main entry', async () => {
-    const kit = await import('@coderize/astro-kit')
+    const kit = await import('@coderizehq/astro-kit')
     expect(Object.keys(kit).sort()).toEqual([
       'breadcrumbList',
       'canonicalUrl',
@@ -21,12 +21,12 @@ describe('package exports', () => {
       'serializeJsonLd',
       'stripTrailingSlash',
       'track',
-      'website'
+      'website',
     ])
   })
 
   it('serves the sitemap options from their own entry', async () => {
-    const sitemap = await import('@coderize/astro-kit/sitemap')
+    const sitemap = await import('@coderizehq/astro-kit/sitemap')
     expect(Object.keys(sitemap).sort()).toEqual(['hasNoindex', 'sitemapOptions'])
   })
 

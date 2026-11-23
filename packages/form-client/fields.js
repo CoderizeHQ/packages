@@ -17,7 +17,7 @@ export const RESERVED_FIELDS = Object.freeze([
   HONEYPOT_FIELD,
   'consent',
   '_fillMs',
-  'uploads'
+  'uploads',
 ])
 
 const RESERVED = new Set(RESERVED_FIELDS)
@@ -90,7 +90,7 @@ export function buildBody({ client, form, subject, fields, guard }) {
     ...(subject ? { subject } : {}),
     ...sent,
     [HONEYPOT_FIELD]: honeypot == null ? '' : String(honeypot),
-    ...(Number.isFinite(fillMs) ? { _fillMs: fillMs } : {})
+    ...(Number.isFinite(fillMs) ? { _fillMs: fillMs } : {}),
   }
   return { body, files, renamed }
 }

@@ -73,7 +73,7 @@ export function verifyWebhook({ stripe, rawBody, signature, secret, tolerance } 
     throw new StripeWebhookError(
       'Stripe webhook is not configured: pass a Stripe client and the signing secret',
       'WEBHOOK_NOT_CONFIGURED',
-      500
+      500,
     )
   }
 
@@ -85,7 +85,7 @@ export function verifyWebhook({ stripe, rawBody, signature, secret, tolerance } 
     throw new StripeWebhookError(
       'Stripe webhook needs the raw request body (a string or Buffer), not parsed JSON',
       'RAW_BODY_REQUIRED',
-      500
+      500,
     )
   }
 

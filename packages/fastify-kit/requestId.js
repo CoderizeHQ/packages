@@ -48,7 +48,7 @@ export function requestIdOptions({ header = REQUEST_ID_HEADER, generate = random
     genReqId(req) {
       const incoming = req.headers[name]
       return isSaneRequestId(incoming) ? incoming : generate()
-    }
+    },
   }
 }
 
@@ -66,5 +66,5 @@ export const echoRequestId = fp(
       reply.header(header, request.id)
     })
   },
-  { fastify: '5.x', name: '@coderize/fastify-kit/echo-request-id' }
+  { fastify: '5.x', name: '@coderizehq/fastify-kit/echo-request-id' },
 )

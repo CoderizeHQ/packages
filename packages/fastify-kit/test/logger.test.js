@@ -76,7 +76,7 @@ describe('loggerOptions', () => {
     expect(line).toMatchObject({
       password: '[Redacted]',
       secret: '[Redacted]',
-      user: { token: '[Redacted]', name: 'Jane' }
+      user: { token: '[Redacted]', name: 'Jane' },
     })
     const { req } = lines.find((l) => l.msg === 'incoming request')
     expect(Object.keys(req).sort()).toEqual(['hostname', 'method', 'url'])
@@ -98,7 +98,7 @@ describe('redactUrl', () => {
     // gronetworking: the event stream's one-time ticket
     [`/v1/stream?ticket=${SECRET}`, `/v1/stream?ticket=${REDACTED}`],
     [`/v1/members?sort=newest&token=${SECRET}&limit=20`, `/v1/members?sort=newest&token=${REDACTED}&limit=20`],
-    [`/x?token=${SECRET}#frag`, `/x?token=${REDACTED}#frag`]
+    [`/x?token=${SECRET}#frag`, `/x?token=${REDACTED}#frag`],
   ])('masks %s', (url, want) => {
     expect(redactUrl(url)).toBe(want)
   })
@@ -107,7 +107,7 @@ describe('redactUrl', () => {
     'leaves %s exactly as sent',
     (url) => {
       expect(redactUrl(url)).toBe(url)
-    }
+    },
   )
 
   it('passes a non-string through', () => {
@@ -162,7 +162,7 @@ describe('loggerOptions URL redaction', () => {
   it('takes extra query names and secret path segments', async () => {
     const logs = await logsFor(`/invite-codes/${SECRET}?k=${SECRET}`, {
       redactQuery: ['k'],
-      redactPathAfter: ['invite-codes']
+      redactPathAfter: ['invite-codes'],
     })
 
     expect(logs.raw.join('')).not.toContain(SECRET)

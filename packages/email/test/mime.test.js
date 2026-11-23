@@ -13,7 +13,7 @@ const base = {
   replyTo: 'organizer@example.com',
   subject: 'Your invoice',
   text: 'Your invoice is attached.',
-  html: '<p>Your invoice is attached.</p>'
+  html: '<p>Your invoice is attached.</p>',
 }
 
 /** The raw message as SES would receive it from send(). */
@@ -48,14 +48,14 @@ describe('the round trip', () => {
       ...base,
       attachments: [
         { filename: 'invoice-1042.pdf', content: pdf },
-        { filename: 'ticket.png', content: png, contentType: 'image/png' }
-      ]
+        { filename: 'ticket.png', content: png, contentType: 'image/png' },
+      ],
     })
 
     const parsed = await PostalMime.parse(raw)
     expect(parsed.attachments.map((a) => [a.filename, a.mimeType, a.disposition])).toEqual([
       ['invoice-1042.pdf', 'application/pdf', 'attachment'],
-      ['ticket.png', 'image/png', 'attachment']
+      ['ticket.png', 'image/png', 'attachment'],
     ])
     expect(Buffer.from(parsed.attachments[0].content).equals(pdf)).toBe(true)
     expect(Buffer.from(parsed.attachments[1].content).equals(png)).toBe(true)
@@ -71,7 +71,7 @@ describe('the round trip', () => {
     expect(Buffer.from(parsed.attachments[0].content).equals(pdf)).toBe(true)
 
     expect(() =>
-      buildRawMessage({ ...base, attachments: [{ filename: 'a.csv', content: 'name,total\nJane,5\n' }] })
+      buildRawMessage({ ...base, attachments: [{ filename: 'a.csv', content: 'name,total\nJane,5\n' }] }),
     ).toThrow(/not base64: pass a Buffer/)
   })
 
@@ -81,7 +81,7 @@ describe('the round trip', () => {
     expect(parsed.from).toEqual({ name: 'TakeUrOwn', address: 'no-reply@takeurown.com' })
     expect(parsed.to).toEqual([
       { name: '', address: 'jane@example.com' },
-      { name: 'Bob Smith', address: 'bob@example.com' }
+      { name: 'Bob Smith', address: 'bob@example.com' },
     ])
     expect(parsed.replyTo).toEqual([{ name: '', address: 'organizer@example.com' }])
     expect(parsed.subject).toBe('Your invoice')
@@ -94,7 +94,7 @@ describe('the wire format', () => {
   const raw = buildRawMessage({
     ...base,
     html: `<table>${'<tr><td>row</td></tr>'.repeat(400)}</table>`,
-    attachments: [{ filename: 'invoice.pdf', content: pdf }]
+    attachments: [{ filename: 'invoice.pdf', content: pdf }],
   })
   const lines = raw.toString('latin1').split('\r\n')
 
@@ -121,12 +121,12 @@ describe('the wire format', () => {
 
   it('sends a single body part when there is only text or only html', async () => {
     const parsed = await PostalMime.parse(
-      buildRawMessage({ ...base, html: undefined, attachments: [{ filename: 'a.pdf', content: pdf }] })
+      buildRawMessage({ ...base, html: undefined, attachments: [{ filename: 'a.pdf', content: pdf }] }),
     )
     expect(parsed.text).toBe('Your invoice is attached.')
     expect(parsed.html).toBeUndefined()
     expect(
-      buildRawMessage({ ...base, html: undefined, attachments: [{ filename: 'a.pdf', content: pdf }] }).toString()
+      buildRawMessage({ ...base, html: undefined, attachments: [{ filename: 'a.pdf', content: pdf }] }).toString(),
     ).not.toMatch(/multipart\/alternative/)
   })
 })
@@ -138,7 +138,7 @@ describe('RFC 2047', () => {
       ...base,
       from: 'Café Rotary <no-reply@icrotary.com>',
       subject,
-      attachments: [{ filename: 'reçu été 2026.pdf', content: pdf }]
+      attachments: [{ filename: 'reçu été 2026.pdf', content: pdf }],
     })
     const text = raw.toString('latin1')
     expect(text).toMatch(/^Subject: =\?UTF-8\?B\?/m)
@@ -162,7 +162,7 @@ describe('RFC 2047', () => {
     const header = text.split('\r\n').slice(text.split('\r\n').findIndex((l) => l.startsWith('Subject:')))
     const lines = header.slice(
       0,
-      header.findIndex((l, i) => i > 0 && !/^[ \t]/.test(l))
+      header.findIndex((l, i) => i > 0 && !/^[ \t]/.test(l)),
     )
     expect(lines.length).toBeGreaterThan(1)
     expect((await PostalMime.parse(raw)).subject).toBe(subject)
@@ -180,12 +180,12 @@ describe('RFC 2047', () => {
   it('quotes an ASCII filename and escapes quotes in it', async () => {
     const raw = buildRawMessage({
       ...base,
-      attachments: [{ filename: 'the "final" report.csv', content: Buffer.from('a,b\n') }]
+      attachments: [{ filename: 'the "final" report.csv', content: Buffer.from('a,b\n') }],
     })
     expect(raw.toString()).toContain('filename="the \\"final\\" report.csv"')
     expect((await PostalMime.parse(raw)).attachments[0]).toMatchObject({
       filename: 'the "final" report.csv',
-      mimeType: 'text/csv'
+      mimeType: 'text/csv',
     })
   })
 })
@@ -196,9 +196,9 @@ describe('headers on the Raw path', () => {
       ...base,
       headers: {
         'List-Unsubscribe': '<https://app.dmarc.ws/unsub?t=abc>',
-        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
       },
-      attachments: [{ filename: 'digest.pdf', content: pdf }]
+      attachments: [{ filename: 'digest.pdf', content: pdf }],
     })
     const parsed = await PostalMime.parse(raw)
     const header = (key) => parsed.headers.find((h) => h.key === key)?.value
@@ -210,7 +210,7 @@ describe('headers on the Raw path', () => {
     const raw = buildRawMessage({
       ...base,
       bcc: 'archive@example.com',
-      attachments: [{ filename: 'a.pdf', content: pdf }]
+      attachments: [{ filename: 'a.pdf', content: pdf }],
     })
     expect(raw.toString()).not.toMatch(/^Bcc:/im)
     expect(raw.toString()).not.toContain('archive@example.com')

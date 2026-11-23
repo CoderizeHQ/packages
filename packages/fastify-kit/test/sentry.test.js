@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('@sentry/node', () => ({
   init: vi.fn(),
   fastifyIntegration: vi.fn(() => ({ name: 'Fastify' })),
-  captureException: vi.fn()
+  captureException: vi.fn(),
 }))
 
 import * as Sentry from '@sentry/node'
@@ -22,7 +22,7 @@ const BASELINE = {
   genAI: { inputs: false, outputs: false },
   databaseQueryData: false,
   queues: false,
-  graphQL: { document: false, variables: false }
+  graphQL: { document: false, variables: false },
 }
 
 beforeEach(() => {
@@ -54,7 +54,7 @@ describe('initSentry', () => {
       release: 'api@abc123',
       integrations: [{ name: 'Fastify' }],
       tracesSampleRate: 0.1,
-      dataCollection: BASELINE
+      dataCollection: BASELINE,
     })
   })
 
@@ -68,7 +68,7 @@ describe('initSentry', () => {
     initSentry({ dsn: 'https://key@o1.ingest.sentry.io/2', tracesSampleRate: 0 })
     expect(Sentry.init.mock.calls[0][0]).toMatchObject({
       dsn: 'https://key@o1.ingest.sentry.io/2',
-      tracesSampleRate: 0
+      tracesSampleRate: 0,
     })
   })
 

@@ -38,7 +38,7 @@ const RESERVED_HEADERS = new Set([
   'mime-version',
   'reply-to',
   'subject',
-  'to'
+  'to',
 ])
 
 // RFC 5322 field name: printable ASCII except the colon.
@@ -64,7 +64,7 @@ const TYPES = {
   txt: 'text/plain',
   webp: 'image/webp',
   xml: 'application/xml',
-  zip: 'application/zip'
+  zip: 'application/zip',
 }
 
 /**
@@ -137,7 +137,7 @@ function headerList(headers) {
   return Object.entries(headers).map(([name, value]) => {
     if (!HEADER_NAME.test(name)) throw invalid(`header name ${JSON.stringify(name)} is not a valid field name`)
     if (RESERVED_HEADERS.has(name.toLowerCase())) {
-      throw invalid(`header ${name} is set by @coderize/email: use the message field instead`)
+      throw invalid(`header ${name} is set by @coderizehq/email: use the message field instead`)
     }
     if (typeof value !== 'string' && typeof value !== 'number') throw invalid(`header ${name} must be a string`)
     const text = String(value)
@@ -240,6 +240,6 @@ export function normalizeMessage(message, defaults = {}) {
     html,
     headers: headerList(m.headers),
     attachments: /** @type {unknown[] | undefined} */ (m.attachments ?? []).map(attachmentPart),
-    configurationSet: /** @type {string | undefined} */ (configurationSet || undefined)
+    configurationSet: /** @type {string | undefined} */ (configurationSet || undefined),
   }
 }

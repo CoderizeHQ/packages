@@ -14,7 +14,7 @@ const prismaValidationMessage = [
   '',
   `  data: { email: "${EMAIL}", medicalNotes: "${NOTE}", age: "twelve" }`,
   '',
-  'Argument `age`: Invalid value provided. Expected Int, provided String.'
+  'Argument `age`: Invalid value provided. Expected Int, provided String.',
 ].join('\n')
 
 /**
@@ -81,7 +81,7 @@ describe('createErrorHandler', () => {
     logs.app.post(
       '/',
       { schema: { body: { type: 'object', required: ['email'], properties: { email: { type: 'string' } } } } },
-      async () => ({ ok: true })
+      async () => ({ ok: true }),
     )
     const response = await logs.app.inject({ method: 'POST', url: '/', payload: { name: EMAIL } })
 
@@ -108,8 +108,8 @@ describe('createErrorHandler', () => {
       '/': () =>
         prismaError('PrismaClientKnownRequestError', `No record was found for an update. Where: email = ${EMAIL}`, {
           code: 'P2025',
-          meta: { modelName: 'Hero', cause: `Record ${EMAIL} not found` }
-        })
+          meta: { modelName: 'Hero', cause: `Record ${EMAIL} not found` },
+        }),
     })
     const response = await current.app.inject('/')
 
@@ -134,12 +134,12 @@ describe('createErrorHandler', () => {
                   kind: 'UniqueConstraintViolation',
                   originalCode: '23505',
                   constraint: { fields: ['email'] },
-                  originalMessage: `Key (email)=(${EMAIL}) already exists.`
-                }
-              }
-            }
-          }
-        )
+                  originalMessage: `Key (email)=(${EMAIL}) already exists.`,
+                },
+              },
+            },
+          },
+        ),
     })
     const response = await current.app.inject('/')
 
@@ -152,7 +152,7 @@ describe('createErrorHandler', () => {
       code: 'P2002',
       kind: 'UniqueConstraintViolation',
       model: 'User',
-      target: { fields: ['email'] }
+      target: { fields: ['email'] },
     })
   })
 
@@ -191,14 +191,14 @@ describe('createErrorHandler', () => {
     expect(line.level).toBe(50)
     expect(line.error.database).toMatchObject({
       name: 'PrismaClientValidationError',
-      invocation: 'prisma.hero.create()'
+      invocation: 'prisma.hero.create()',
     })
     expect(current.captureException).toHaveBeenCalledWith(error)
   })
 
   it('finds a database error wrapped as the cause of another error', async () => {
     const driverError = prismaError('DriverAdapterError', `duplicate key value: Key (email)=(${EMAIL})`, {
-      cause: { kind: 'UniqueConstraintViolation', originalCode: '23505', constraint: { fields: ['email'] } }
+      cause: { kind: 'UniqueConstraintViolation', originalCode: '23505', constraint: { fields: ['email'] } },
     })
     current = await build({ '/': () => new Error(`saving ${EMAIL} failed`, { cause: driverError }) })
     const response = await current.app.inject('/')
@@ -211,7 +211,8 @@ describe('createErrorHandler', () => {
 
   it('answers any other error with the fixed 500, logging name, code and our frame only', async () => {
     current = await build({
-      '/': () => Object.assign(new TypeError(`Cannot read properties of undefined (reading '${NOTE}')`), { code: 'X1' })
+      '/': () =>
+        Object.assign(new TypeError(`Cannot read properties of undefined (reading '${NOTE}')`), { code: 'X1' }),
     })
     const response = await current.app.inject('/')
 
@@ -247,8 +248,8 @@ describe('createErrorHandler', () => {
         Object.assign(new Error('Rate limit exceeded, retry in 1 minute'), {
           statusCode: 429,
           code: 'FST_ERR_RATE_LIMITED',
-          headers: { 'retry-after': '60' }
-        })
+          headers: { 'retry-after': '60' },
+        }),
     })
     const response = await current.app.inject('/')
 
@@ -267,7 +268,7 @@ describe('createErrorHandler', () => {
       method: 'POST',
       url: '/',
       headers: { 'content-type': 'application/json' },
-      payload: `{"email": "${EMAIL}"`
+      payload: `{"email": "${EMAIL}"`,
     })
 
     expect(response.statusCode).toBe(400)
@@ -282,8 +283,8 @@ describe('createErrorHandler', () => {
       createErrorHandler({
         captureException: () => {
           throw new Error('transport down')
-        }
-      })
+        },
+      }),
     )
     logs.app.get('/', async () => {
       throw new Error('boom')
@@ -312,7 +313,7 @@ describe('createErrorHandler', () => {
           throw new AppError('Nope', 403, 'FORBIDDEN')
         })
       },
-      { prefix: '/child' }
+      { prefix: '/child' },
     )
     const response = await logs.app.inject('/child')
 
@@ -333,7 +334,7 @@ describe('createErrorHandler', () => {
 
   it('passes through a 400 and keeps the code a plugin or route gave it', async () => {
     current = await build({
-      '/': () => Object.assign(new Error('Missing stripe-signature header'), { statusCode: 400, code: 'NO_SIGNATURE' })
+      '/': () => Object.assign(new Error('Missing stripe-signature header'), { statusCode: 400, code: 'NO_SIGNATURE' }),
     })
     const response = await current.app.inject('/')
 
@@ -357,9 +358,9 @@ describe('createErrorHandler', () => {
         '/file': () =>
           Object.assign(new Error('request file too large'), { statusCode: 413, code: 'FST_REQ_FILE_TOO_LARGE' }),
         '/files': () => Object.assign(new Error('reach files limit'), { statusCode: 413, code: 'FST_FILES_LIMIT' }),
-        '/other': () => Object.assign(new Error('Too many'), { statusCode: 429, code: 'FST_ERR_RATE_LIMITED' })
+        '/other': () => Object.assign(new Error('Too many'), { statusCode: 429, code: 'FST_ERR_RATE_LIMITED' }),
       },
-      { errorCodes: { FST_REQ_FILE_TOO_LARGE: tooLarge, FST_FILES_LIMIT: tooLarge } }
+      { errorCodes: { FST_REQ_FILE_TOO_LARGE: tooLarge, FST_FILES_LIMIT: tooLarge } },
     )
 
     for (const url of ['/file', '/files']) {
@@ -377,10 +378,10 @@ describe('createErrorHandler', () => {
         '/': () =>
           prismaError('PrismaClientKnownRequestError', `Foreign key constraint violated: ${EMAIL}`, {
             code: 'P2003',
-            meta: { modelName: 'Booking' }
-          })
+            meta: { modelName: 'Booking' },
+          }),
       },
-      { errorCodes: { P2003: { statusCode: 409, message: 'Still in use', code: 'IN_USE' } } }
+      { errorCodes: { P2003: { statusCode: 409, message: 'Still in use', code: 'IN_USE' } } },
     )
     const response = await current.app.inject('/')
 
@@ -394,10 +395,10 @@ describe('createErrorHandler', () => {
       {
         '/': () =>
           prismaError('PrismaClientInitializationError', `Can't reach database server at ${EMAIL}`, {
-            code: 'P1001'
-          })
+            code: 'P1001',
+          }),
       },
-      { errorCodes: { P1001: { statusCode: 503, message: 'Try again shortly', code: 'DB_UNAVAILABLE' } } }
+      { errorCodes: { P1001: { statusCode: 503, message: 'Try again shortly', code: 'DB_UNAVAILABLE' } } },
     )
     const response = await current.app.inject('/')
 
@@ -409,7 +410,7 @@ describe('createErrorHandler', () => {
 
   it('refuses an errorCodes entry without a 4xx or 5xx status, a message and a code', () => {
     expect(() => createErrorHandler({ errorCodes: { X: { statusCode: 200, message: 'ok', code: 'OK' } } })).toThrow(
-      TypeError
+      TypeError,
     )
     expect(() => createErrorHandler({ errorCodes: { X: { statusCode: 400 } } })).toThrow(TypeError)
     expect(() => createErrorHandler({ errorCodes: null })).toThrow(TypeError)

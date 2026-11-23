@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 
 import { describe, expect, it } from 'vitest'
 
-import { cardFeeCents, grossUpForCardFee, US_CARD_FEE } from '@coderize/stripe/fees'
+import { cardFeeCents, grossUpForCardFee, US_CARD_FEE } from '@coderizehq/stripe/fees'
 
 // The formulas the fleet ran before this package, kept here as the reference.
 // icrotary's server (api/src/lib/stripe.js calculateProcessingFee), which charges the card. The truth.
@@ -88,7 +88,7 @@ describe('grossUpForCardFee', () => {
     expect(grossUpForCardFee(10000, { rate: 0.022, fixedCents: 30 })).toEqual({
       netCents: 10000,
       feeCents: 256,
-      totalCents: 10256
+      totalCents: 10256,
     })
     expect(grossUpForCardFee(10000, { rate: 0, fixedCents: 0 }).feeCents).toBe(0)
     expect(cardFeeCents(10000, { rate: 0.035 })).toBe(cardFeeCents(10000, { rate: 0.035, fixedCents: 30 }))
@@ -106,7 +106,7 @@ describe('grossUpForCardFee', () => {
   })
 })
 
-describe('@coderize/stripe/fees in the browser', () => {
+describe('@coderizehq/stripe/fees in the browser', () => {
   it('imports nothing, so a page loads it without the Stripe SDK', async () => {
     const source = await readFile(new URL('../fees.js', import.meta.url), 'utf8')
     expect(source).not.toMatch(/^\s*import\s|\bimport\(|\brequire\(/m)

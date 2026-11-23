@@ -8,7 +8,7 @@ import {
   organization,
   postalAddress,
   serializeJsonLd,
-  website
+  website,
 } from '../schema.js'
 
 const SITE = 'https://example.com'
@@ -18,7 +18,7 @@ describe('serializeJsonLd', () => {
     expect(JSON.parse(serializeJsonLd({ '@type': 'WebSite', name: 'A' }))).toEqual({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'A'
+      name: 'A',
     })
   })
 
@@ -31,8 +31,8 @@ describe('serializeJsonLd', () => {
     expect(JSON.parse(serializeJsonLd([{ '@context': 'https://schema.org', '@type': 'A' }, { '@type': 'B' }]))).toEqual(
       {
         '@context': 'https://schema.org',
-        '@graph': [{ '@type': 'A' }, { '@type': 'B' }]
-      }
+        '@graph': [{ '@type': 'A' }, { '@type': 'B' }],
+      },
     )
   })
 
@@ -56,7 +56,7 @@ describe('organization', () => {
       '@id': 'https://example.com/#organization',
       name: 'Acme',
       url: 'https://example.com/',
-      logo: 'https://example.com/logo.png'
+      logo: 'https://example.com/logo.png',
     })
   })
 
@@ -81,8 +81,8 @@ describe('localBusiness', () => {
         telephone: '+1-810-555-0100',
         address: { street: '1 Main St', city: 'Lapeer', region: 'MI', postalCode: '48446' },
         geo: { latitude: 43.05, longitude: -83.31 },
-        hours: [{ days: ['Monday', 'Tuesday'], opens: '09:00', closes: '17:00' }]
-      })
+        hours: [{ days: ['Monday', 'Tuesday'], opens: '09:00', closes: '17:00' }],
+      }),
     ).toEqual({
       '@type': 'InsuranceAgency',
       '@id': 'https://example.com/#localbusiness',
@@ -95,12 +95,12 @@ describe('localBusiness', () => {
         addressLocality: 'Lapeer',
         addressRegion: 'MI',
         postalCode: '48446',
-        addressCountry: 'US'
+        addressCountry: 'US',
       },
       geo: { '@type': 'GeoCoordinates', latitude: 43.05, longitude: -83.31 },
       openingHoursSpecification: [
-        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday'], opens: '09:00', closes: '17:00' }
-      ]
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday'], opens: '09:00', closes: '17:00' },
+      ],
     })
   })
 
@@ -117,7 +117,7 @@ describe('postalAddress', () => {
       '@type': 'PostalAddress',
       addressLocality: 'Flint',
       addressRegion: 'MI',
-      addressCountry: 'US'
+      addressCountry: 'US',
     })
   })
 })
@@ -130,16 +130,16 @@ describe('breadcrumbList', () => {
         items: [
           { name: 'Home', path: '/' },
           { name: 'Services', path: '/services/' },
-          { name: 'Roofing', path: 'https://example.com/services/roofing/' }
-        ]
-      })
+          { name: 'Roofing', path: 'https://example.com/services/roofing/' },
+        ],
+      }),
     ).toEqual({
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://example.com/' },
         { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://example.com/services' },
-        { '@type': 'ListItem', position: 3, name: 'Roofing', item: 'https://example.com/services/roofing' }
-      ]
+        { '@type': 'ListItem', position: 3, name: 'Roofing', item: 'https://example.com/services/roofing' },
+      ],
     })
   })
 
@@ -153,7 +153,7 @@ describe('faqPage', () => {
   it('builds Question and Answer pairs', () => {
     expect(faqPage({ items: [{ question: 'Open Sundays?', answer: 'No.' }] })).toEqual({
       '@type': 'FAQPage',
-      mainEntity: [{ '@type': 'Question', name: 'Open Sundays?', acceptedAnswer: { '@type': 'Answer', text: 'No.' } }]
+      mainEntity: [{ '@type': 'Question', name: 'Open Sundays?', acceptedAnswer: { '@type': 'Answer', text: 'No.' } }],
     })
   })
 
@@ -176,8 +176,8 @@ describe('event', () => {
         organizer: 'Memphis Nightmare',
         eventStatus: 'EventScheduled',
         attendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        offers: { '@type': 'Offer', price: '15', priceCurrency: 'USD' }
-      })
+        offers: { '@type': 'Offer', price: '15', priceCurrency: 'USD' },
+      }),
     ).toEqual({
       '@type': 'Event',
       name: 'Haunt Night',
@@ -188,12 +188,12 @@ describe('event', () => {
       location: {
         '@type': 'Place',
         name: 'Fairgrounds',
-        address: { '@type': 'PostalAddress', addressLocality: 'Memphis', addressRegion: 'MI', addressCountry: 'US' }
+        address: { '@type': 'PostalAddress', addressLocality: 'Memphis', addressRegion: 'MI', addressCountry: 'US' },
       },
       organizer: { '@type': 'Organization', name: 'Memphis Nightmare' },
       eventStatus: 'https://schema.org/EventScheduled',
       eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-      offers: { '@type': 'Offer', price: '15', priceCurrency: 'USD' }
+      offers: { '@type': 'Offer', price: '15', priceCurrency: 'USD' },
     })
   })
 
@@ -211,7 +211,7 @@ describe('website', () => {
       '@id': 'https://example.com/#website',
       name: 'Acme',
       url: 'https://example.com',
-      publisher: { '@id': 'https://example.com/#organization' }
+      publisher: { '@id': 'https://example.com/#organization' },
     })
   })
 })

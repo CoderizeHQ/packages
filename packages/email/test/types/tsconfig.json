@@ -5,7 +5,9 @@
     "target": "es2022",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "types": ["node"]
+    "types": ["node"],
+    "allowJs": true,
+    "checkJs": true
   },
-  "files": ["consumer.ts"]
+  "files": ["consumer.js"]
 }

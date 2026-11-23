@@ -49,7 +49,7 @@ export function robotsTxt({ site, preview, disallow = [], blockAgents = [], site
     if (path === '/' || path === '/*') {
       throw new Error(
         'robotsTxt: "Disallow: /" for every crawler is never right. A preview is kept out of search by its ' +
-          'X-Robots-Tag noindex header, and a blocked crawler cannot see that header.'
+          'X-Robots-Tag noindex header, and a blocked crawler cannot see that header.',
       )
     }
   }
@@ -59,7 +59,7 @@ export function robotsTxt({ site, preview, disallow = [], blockAgents = [], site
     lines.push(
       '# Preview host: kept out of search by the X-Robots-Tag noindex header, not by this file,',
       '# so crawlers may fetch pages and see it.',
-      ''
+      '',
     )
   }
 
@@ -92,6 +92,6 @@ export function robotsTxt({ site, preview, disallow = [], blockAgents = [], site
 export function robotsEndpoint(options = {}) {
   return ({ site }) =>
     new Response(robotsTxt({ ...options, site }), {
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     })
 }

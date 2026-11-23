@@ -101,7 +101,7 @@ export type EventHandlers<E extends { type: string } = Stripe.Event, C = undefin
 export declare function routeEvent<E extends { type: string } = Stripe.Event, C = undefined>(
   event: E,
   handlers: EventHandlers<E, C>,
-  context?: C
+  context?: C,
 ): Promise<boolean>
 
 export interface EventStore<Tx = unknown> {
@@ -128,7 +128,7 @@ export declare function processEventOnce<E extends { id: string }, Tx = unknown>
   event: E,
   handler: (event: E, tx: Tx | undefined) => unknown,
   store: EventStore<Tx>,
-  options?: ProcessEventOnceOptions
+  options?: ProcessEventOnceOptions,
 ): Promise<{ duplicate: boolean }>
 
 export interface PrismaEventStoreOptions {
@@ -145,7 +145,7 @@ export interface PrismaEventStoreOptions {
 /** An EventStore for processEventOnce over a Prisma model with a unique event id. */
 export declare function prismaEventStore(
   prisma: any,
-  options?: PrismaEventStoreOptions
+  options?: PrismaEventStoreOptions,
 ): Required<Omit<EventStore<any>, 'isDuplicate'>>
 
 export interface WebhookHandlerContext<Tx = any> {
@@ -166,7 +166,7 @@ export interface HandleStripeWebhookInput<Tx = any> {
   handlers: {
     [T in Stripe.Event['type']]?: (
       event: Extract<Stripe.Event, { type: T }>,
-      context: WebhookHandlerContext<Tx>
+      context: WebhookHandlerContext<Tx>,
     ) => unknown
   }
   /** The PrismaClient, for the default event store. */
@@ -184,7 +184,7 @@ export interface HandleStripeWebhookInput<Tx = any> {
  * original error as its cause) when a handler fails, so the route answers 500 and reports it.
  */
 export declare function handleStripeWebhook<Tx = any>(
-  input: HandleStripeWebhookInput<Tx>
+  input: HandleStripeWebhookInput<Tx>,
 ): Promise<{ status: number; body: Record<string, unknown> }>
 
 /** Anything with Stripe's shape, in the pinned or an older API version. */
@@ -202,7 +202,7 @@ export declare function invoicePeriodStart(invoice: StripeObject): Date | null
 /** The PaymentIntent that paid an invoice: the payload first, then one retrieve when `stripe` is given. */
 export declare function invoicePaymentIntentId(
   stripe: Pick<Stripe, 'invoices'> | null | undefined,
-  invoice: StripeObject
+  invoice: StripeObject,
 ): Promise<string | null>
 
 /** The Charge that paid an invoice, from the payload only. */

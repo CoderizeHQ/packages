@@ -11,12 +11,12 @@ const declared = (types) =>
 
 describe('package exports', () => {
   it('serves the mailer from the main entry', async () => {
-    const pkg = await import('@coderize/email')
+    const pkg = await import('@coderizehq/email')
     expect(Object.keys(pkg).sort()).toEqual(MAIN)
   })
 
-  it('serves the SNS verifier from @coderize/email/sns', async () => {
-    const sns = await import('@coderize/email/sns')
+  it('serves the SNS verifier from @coderizehq/email/sns', async () => {
+    const sns = await import('@coderizehq/email/sns')
     expect(Object.keys(sns).sort()).toEqual(SNS)
   })
 

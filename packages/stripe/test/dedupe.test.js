@@ -31,7 +31,7 @@ function memoryStore({ uniqueViolation = false } = {}) {
       tx.ids.forEach((id) => ids.add(id))
       rows.splice(0, rows.length, ...tx.rows)
       return result
-    })
+    }),
   }
 }
 

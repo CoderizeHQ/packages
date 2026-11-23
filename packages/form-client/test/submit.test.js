@@ -25,7 +25,7 @@ const submit = (options = {}) =>
     form: 'contact',
     fields: { name: 'Jane Doe', email: 'jane@example.com', message: 'Hello' },
     guard: fixedGuard(),
-    ...options
+    ...options,
   })
 
 describe('submitForm', () => {
@@ -45,7 +45,7 @@ describe('submitForm', () => {
       email: 'jane@example.com',
       message: 'Hello',
       website: '',
-      _fillMs: 8421
+      _fillMs: 8421,
     })
   })
 
@@ -66,7 +66,7 @@ describe('submitForm', () => {
     await expect(submit()).resolves.toEqual({
       ok: false,
       status: 429,
-      message: 'Too many submissions. Please try again later or call us.'
+      message: 'Too many submissions. Please try again later or call us.',
     })
 
     // The five maverickpokerleague forms replaced this with "Something went wrong".
@@ -79,7 +79,7 @@ describe('submitForm', () => {
     await expect(submit()).resolves.toEqual({
       ok: false,
       status: 403,
-      message: 'This form only accepts submissions from its own website.'
+      message: 'This form only accepts submissions from its own website.',
     })
   })
 
@@ -168,7 +168,7 @@ describe('submitForm', () => {
         form: 'contact',
         name: 'Jane',
         website: '',
-        _fillMs: 8421
+        _fillMs: 8421,
       })
     })
 
@@ -191,8 +191,8 @@ describe('submitForm', () => {
           redirect: 'https://elsewhere.example',
           consent: true,
           _fillMs: 999999,
-          uploads: ['otherclient/x/y.pdf']
-        }
+          uploads: ['otherclient/x/y.pdf'],
+        },
       })
 
       const body = sentBody(fetch)
@@ -216,7 +216,7 @@ describe('submitForm', () => {
     it('lists every key form-api-ses treats as a setting', () => {
       // META_FIELDS in form-api-ses index.js.
       expect([...RESERVED_FIELDS].sort()).toEqual(
-        ['website', 'redirect', 'client', 'subject', 'consent', 'form', '_fillMs', 'uploads'].sort()
+        ['website', 'redirect', 'client', 'subject', 'consent', 'form', '_fillMs', 'uploads'].sort(),
       )
     })
   })

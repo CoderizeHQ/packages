@@ -25,7 +25,7 @@ async function build(options = { origins: `${WEB}, http://localhost:5173` }) {
 const preflight = (origin, method) => ({
   method: 'OPTIONS',
   url: '/items/1',
-  headers: { origin, 'access-control-request-method': method }
+  headers: { origin, 'access-control-request-method': method },
 })
 
 describe('securityPlugins', () => {
@@ -104,7 +104,7 @@ describe('securityPlugins', () => {
     await app.close()
     app = Fastify()
     await expect(app.register(securityPlugins, { origins: [WEB], cors: { origin: true } })).rejects.toThrow(
-      /pass origins/
+      /pass origins/,
     )
   })
 
@@ -116,7 +116,7 @@ describe('securityPlugins', () => {
     ['null', 'null'],
     ['a wildcard in a list', [WEB, '*']],
     ['a function', () => true],
-    ['a URL with a path', 'https://app.example.com/login']
+    ['a URL with a path', 'https://app.example.com/login'],
   ])('refuses %s as origins', async (_label, origins) => {
     app = Fastify()
     await expect(app.register(securityPlugins, { origins })).rejects.toThrow(TypeError)
@@ -128,7 +128,7 @@ describe('parseOrigins', () => {
     const pattern = /^https:\/\/[a-z]+\.example\.com$/
     expect(parseOrigins(' https://a.example.com/ ,,http://localhost:4321')).toEqual([
       'https://a.example.com',
-      'http://localhost:4321'
+      'http://localhost:4321',
     ])
     expect(parseOrigins([pattern, 'capacitor://localhost'])).toEqual([pattern, 'capacitor://localhost'])
   })

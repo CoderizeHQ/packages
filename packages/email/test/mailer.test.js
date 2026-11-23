@@ -31,7 +31,7 @@ describe('the EMAIL_PROVIDER switch', () => {
       expect(mailer.mode).toBe('log')
       expect(await mailer.send(message())).toEqual({ status: 'logged', id: null })
       expect(client.send).not.toHaveBeenCalled()
-    }
+    },
   )
 
   it('logs at error level in production, with no recipient address and no body', async () => {
@@ -51,7 +51,7 @@ describe('the EMAIL_PROVIDER switch', () => {
     await mailer.send(message({ cc: 'sam@example.com' }))
     expect(logger.info.mock.calls[0]).toEqual([
       { messageId: 'ses-message-1', recipients: 2, subject: 'Road alert' },
-      'email sent'
+      'email sent',
     ])
     expect(JSON.stringify(logger.info.mock.calls)).not.toMatch(/@example/)
 
@@ -106,7 +106,7 @@ describe('recipients', () => {
     await expect(mailer.send(message({ to: [['a@example.com', 'b@example.com']] }))).rejects.toMatchObject({
       name: 'SendError',
       kind: 'permanent',
-      message: expect.stringMatching(/nested list/)
+      message: expect.stringMatching(/nested list/),
     })
     expect(client.send).not.toHaveBeenCalled()
   })
@@ -114,15 +114,15 @@ describe('recipients', () => {
   it('puts cc and bcc in the envelope, and replyTo in ReplyToAddresses', async () => {
     const { mailer, client } = sesMailer()
     await mailer.send(
-      message({ cc: 'c@example.com', bcc: ['archive@example.com'], replyTo: 'Help <help@thawwatch.com>' })
+      message({ cc: 'c@example.com', bcc: ['archive@example.com'], replyTo: 'Help <help@thawwatch.com>' }),
     )
     expect(client.input()).toMatchObject({
       Destination: {
         ToAddresses: ['jane@example.com'],
         CcAddresses: ['c@example.com'],
-        BccAddresses: ['archive@example.com']
+        BccAddresses: ['archive@example.com'],
       },
-      ReplyToAddresses: ['Help <help@thawwatch.com>']
+      ReplyToAddresses: ['Help <help@thawwatch.com>'],
     })
   })
 })
@@ -145,7 +145,7 @@ describe('from', () => {
     const { mailer, client } = sesMailer({ from: 'Café Lapeer <hello@example.com>' })
     await mailer.send(message())
     expect(client.input().FromEmailAddress).toBe(
-      `=?UTF-8?B?${Buffer.from('Café Lapeer').toString('base64')}?= <hello@example.com>`
+      `=?UTF-8?B?${Buffer.from('Café Lapeer').toString('base64')}?= <hello@example.com>`,
     )
   })
 })
@@ -157,8 +157,8 @@ describe('the Simple path', () => {
     expect(client.input().Content).toEqual({
       Simple: {
         Subject: { Data: 'Glace sur la route', Charset: 'UTF-8' },
-        Body: { Text: { Data: 'Ice on M-24.', Charset: 'UTF-8' }, Html: { Data: '<p>Ice</p>', Charset: 'UTF-8' } }
-      }
+        Body: { Text: { Data: 'Ice on M-24.', Charset: 'UTF-8' }, Html: { Data: '<p>Ice</p>', Charset: 'UTF-8' } },
+      },
     })
   })
 
@@ -168,13 +168,13 @@ describe('the Simple path', () => {
       message({
         headers: {
           'List-Unsubscribe': '<https://app.dmarc.ws/unsub?t=abc>, <mailto:unsub@dmarc.ws>',
-          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
-        }
-      })
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+        },
+      }),
     )
     expect(client.input().Content.Simple.Headers).toEqual([
       { Name: 'List-Unsubscribe', Value: '<https://app.dmarc.ws/unsub?t=abc>, <mailto:unsub@dmarc.ws>' },
-      { Name: 'List-Unsubscribe-Post', Value: 'List-Unsubscribe=One-Click' }
+      { Name: 'List-Unsubscribe-Post', Value: 'List-Unsubscribe=One-Click' },
     ])
   })
 
@@ -192,8 +192,8 @@ describe('the Raw path', () => {
       message({
         bcc: 'archive@example.com',
         replyTo: 'help@thawwatch.com',
-        attachments: [{ filename: 'report.pdf', content: fixture('sample.pdf') }]
-      })
+        attachments: [{ filename: 'report.pdf', content: fixture('sample.pdf') }],
+      }),
     )
     const input = client.input()
     expect(input.Content.Simple).toBeUndefined()
@@ -234,7 +234,7 @@ describe('failures', () => {
     const cause = awsError('AccessDeniedException', {
       status: 403,
       message:
-        'User arn:aws:sts::651706755822:assumed-role/coderize-apps-v3-instance is not authorized to perform ses:SendEmail on resource arn:aws:ses:us-east-1:651706755822:configuration-set/coderize-default'
+        'User arn:aws:sts::651706755822:assumed-role/coderize-apps-v3-instance is not authorized to perform ses:SendEmail on resource arn:aws:ses:us-east-1:651706755822:configuration-set/coderize-default',
     })
     const { mailer, logger } = sesMailer({ respond: async () => Promise.reject(cause) })
     await expect(mailer.send(message())).rejects.toMatchObject({ kind: 'permanent' })
@@ -246,7 +246,7 @@ describe('failures', () => {
       statusCode: 403,
       requestId: 'req-123',
       recipients: 1,
-      detail: expect.stringContaining('configuration-set/coderize-default')
+      detail: expect.stringContaining('configuration-set/coderize-default'),
     })
     expect(fields).not.toHaveProperty('err')
     expect(JSON.stringify(fields)).not.toMatch(/jane@/)
@@ -255,7 +255,7 @@ describe('failures', () => {
   it('keeps addresses out of the logged AWS message', async () => {
     const cause = awsError('MessageRejected', {
       message:
-        'Email address is not verified. The following identities failed the check in region US-EAST-1: jane@example.com'
+        'Email address is not verified. The following identities failed the check in region US-EAST-1: jane@example.com',
     })
     const { mailer, logger } = sesMailer({ respond: async () => Promise.reject(cause) })
     await expect(mailer.send(message())).rejects.toBeInstanceOf(SendError)
@@ -267,7 +267,7 @@ describe('failures', () => {
     await expect(mailer.send(message({ subject: '' }))).rejects.toMatchObject({ kind: 'permanent' })
     expect(logger.error).toHaveBeenCalledWith(
       { kind: 'permanent', reason: 'Email not sent: subject is required' },
-      'email not sent'
+      'email not sent',
     )
   })
 })
@@ -291,7 +291,7 @@ describe('trySend', () => {
       ok: false,
       status: 'failed',
       id: null,
-      error: { name: 'SendError', kind: 'transient' }
+      error: { name: 'SendError', kind: 'transient' },
     })
     const refused = await mailer.trySend(null)
     expect(refused).toMatchObject({ ok: false, error: { kind: 'permanent' } })

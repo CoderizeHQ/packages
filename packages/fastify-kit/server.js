@@ -28,8 +28,8 @@ export async function startServer(
     port = portFromEnv(),
     host = process.env.HOST || '0.0.0.0',
     shutdownTimeoutMs = 10_000,
-    signals = ['SIGTERM', 'SIGINT']
-  } = {}
+    signals = ['SIGTERM', 'SIGINT'],
+  } = {},
 ) {
   if (!Number.isInteger(port) || port < 0 || port > 65535) {
     throw new TypeError(`startServer: port must be an integer from 0 to 65535, got ${port}`)
@@ -58,7 +58,7 @@ export async function startServer(
         clearTimeout(timer)
         app.log.error({ error: errorFacts(error) }, 'shutdown failed')
         process.exit(1)
-      }
+      },
     )
   }
 

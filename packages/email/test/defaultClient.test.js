@@ -13,7 +13,7 @@ vi.mock('@aws-sdk/client-sesv2', async (importOriginal) => ({
     async send() {
       return { MessageId: 'stand-in' }
     }
-  }
+  },
 }))
 
 const { createMailer } = await import('../index.js')

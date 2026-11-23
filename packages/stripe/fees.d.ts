@@ -1,4 +1,4 @@
-// Types for `@coderize/stripe/fees`, the browser-safe card-fee gross-up. Hand-written to match fees.js;
+// Types for `@coderizehq/stripe/fees`, the browser-safe card-fee gross-up. Hand-written to match fees.js;
 // test/types/consumer.ts type-checks them on every `pnpm test`.
 
 export interface CardFee {

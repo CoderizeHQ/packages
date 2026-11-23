@@ -8,7 +8,7 @@ describe('requireEnv', () => {
 
     expect(requireEnv(['DATABASE_URL', 'JWT_SECRET'], env)).toEqual({
       DATABASE_URL: 'postgresql://x',
-      JWT_SECRET: 's'.repeat(32)
+      JWT_SECRET: 's'.repeat(32),
     })
   })
 

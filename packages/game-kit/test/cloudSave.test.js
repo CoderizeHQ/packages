@@ -8,11 +8,11 @@ vi.mock('@capacitor/core', () => {
   capacitor.registerPlugin = vi.fn(() => plugin)
   return {
     Capacitor: { getPlatform: () => capacitor.platform },
-    registerPlugin: (...args) => capacitor.registerPlugin(...args)
+    registerPlugin: (...args) => capacitor.registerPlugin(...args),
   }
 })
 
-const { createCloudSave } = await import('@coderize/game-kit/cloud-save')
+const { createCloudSave } = await import('@coderizehq/game-kit/cloud-save')
 
 // A game's merge, cut down to what the tests need. A start over raises `epoch`, and the higher
 // epoch wins outright; within one epoch the furthest unlock and the best stars per level win, and
@@ -61,7 +61,7 @@ describe('cloud save', () => {
 
     it('registers the native plugin named CloudSave, the name every existing save is under, on first use', async () => {
       vi.resetModules()
-      const module = await import('@coderize/game-kit/cloud-save')
+      const module = await import('@coderizehq/game-kit/cloud-save')
       const session = module.createCloudSave({ describe: describeSave, merge })
       expect(capacitor.registerPlugin).not.toHaveBeenCalled()
       await session.load()
@@ -73,7 +73,7 @@ describe('cloud save', () => {
     it('uses a plugin it is given instead', async () => {
       const own = {
         status: vi.fn(async () => ({ signedIn: true })),
-        load: vi.fn(async () => ({ data: '{"unlocked":3}' }))
+        load: vi.fn(async () => ({ data: '{"unlocked":3}' })),
       }
       expect(await createCloudSave({ describe: describeSave, merge, plugin: own }).load()).toEqual({ unlocked: 3 })
       expect(own.load).toHaveBeenCalledOnce()
@@ -139,7 +139,7 @@ describe('cloud save', () => {
       await settle()
       expect(plugin.save).toHaveBeenCalledExactlyOnceWith({
         data: '{"level":4,"unlocked":7}',
-        description: 'Test Game: level 7'
+        description: 'Test Game: level 7',
       })
     })
 
@@ -163,7 +163,7 @@ describe('cloud save', () => {
       await settle()
       expect(plugin.save.mock.calls.map(([call]) => call.description)).toEqual([
         'Test Game: level 2',
-        'Test Game: level 4'
+        'Test Game: level 4',
       ])
     })
 
@@ -203,7 +203,7 @@ describe('cloud save', () => {
         describe: () => {
           throw new Error('bad save')
         },
-        merge
+        merge,
       })
       await broken.load()
       broken.save({ unlocked: 2 })

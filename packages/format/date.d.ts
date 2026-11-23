@@ -55,14 +55,14 @@ export declare function addDays(day: CalendarDay, days: number): CalendarDay
 export declare function zonedWallTimeToUtc(wall: WallTimeParts, timeZone?: string): Date
 export declare function zonedWallTimeToUtc(
   wall: string | WallTimeParts | null | undefined,
-  timeZone?: string
+  timeZone?: string,
 ): Date | null
 
 /** An instant as a clock in `timeZone` reads it, `YYYY-MM-DDTHH:MM` ('' for an empty value). */
 export declare function utcToZonedWallTime(
   value: Instant | null | undefined,
   timeZone?: string,
-  options?: { seconds?: boolean }
+  options?: { seconds?: boolean },
 ): string
 
 /** The first instant of a day in `timeZone` and of the next day (exclusive). 23 or 25 hours apart on clock-change days. */
@@ -71,23 +71,23 @@ export declare function dayRangeUtc(day: CalendarDay, timeZone?: string): { star
 /** A date for display. A `YYYY-MM-DD` string prints as that day in any zone. */
 export declare function formatDate(
   value: Instant | null | undefined,
-  options?: { timeZone?: string; style?: DateStyle; locale?: string }
+  options?: { timeZone?: string; style?: DateStyle; locale?: string },
 ): string
 
 /** A date and time for display, read in `timeZone`. */
 export declare function formatDateTime(
   value: Instant | null | undefined,
-  options?: { timeZone?: string; dateStyle?: DateStyle; timeStyle?: DateStyle; locale?: string }
+  options?: { timeZone?: string; dateStyle?: DateStyle; timeStyle?: DateStyle; locale?: string },
 ): string
 
 /** A time of day for display, read in `timeZone`. */
 export declare function formatTime(
   value: Instant | null | undefined,
-  options?: { timeZone?: string; style?: DateStyle; locale?: string }
+  options?: { timeZone?: string; style?: DateStyle; locale?: string },
 ): string
 
 /** "3 hours ago", "in 2 days", "yesterday". A `YYYY-MM-DD` day counts calendar days from today in `timeZone`. */
 export declare function formatRelative(
   value: Instant | null | undefined,
-  options?: { now?: Date | number; timeZone?: string; locale?: string; numeric?: 'auto' | 'always' }
+  options?: { now?: Date | number; timeZone?: string; locale?: string; numeric?: 'auto' | 'always' },
 ): string

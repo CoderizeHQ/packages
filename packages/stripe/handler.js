@@ -45,7 +45,7 @@ export async function handleStripeWebhook({
   prisma,
   storeOptions,
   store,
-  log = console
+  log = console,
 }) {
   if (handlers == null || typeof handlers !== 'object') {
     throw new TypeError('handleStripeWebhook: pass handlers, keyed by event type')
@@ -74,7 +74,7 @@ export async function handleStripeWebhook({
     ;({ duplicate } = await processEventOnce(
       event,
       (event, tx) => handler(event, { tx, after: (fn) => queued.push(fn), log }),
-      eventStore
+      eventStore,
     ))
   } catch (err) {
     throw new StripeWebhookHandlerError(event, { cause: err })

@@ -7,7 +7,7 @@
  *
  * ```js
  * // src/lib/env.js, imported first by app.js
- * import { requireEnv } from '@coderize/fastify-kit'
+ * import { requireEnv } from '@coderizehq/fastify-kit'
  *
  * requireEnv(['DATABASE_URL', 'JWT_SECRET', 'CORS_ORIGINS'])
  * export const env = process.env

@@ -30,7 +30,7 @@ const TRANSIENT_NAMES = new Set([
   'InternalFailure',
   'ServiceUnavailable',
   'RequestTimeout',
-  'TimeoutError'
+  'TimeoutError',
 ])
 
 /**

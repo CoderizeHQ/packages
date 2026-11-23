@@ -1,38 +1,38 @@
-# @coderize/format
+# @coderizehq/format
 
-The formatting rules every CoderizeDEV app keeps rewriting: Michigan-time days and wall-clock times, integer-cents
+The formatting rules every Coderize app keeps rewriting: Michigan-time days and wall-clock times, integer-cents
 money, CSV downloads, US phone numbers and URL slugs. One copy, tested, so the API, the admin screens and the
 public site agree.
 
 ```bash
-pnpm add @coderize/format
+pnpm add @coderizehq/format
 ```
 
 **No dependencies, no imports.** Every module is plain ESM built on `Intl`, so the same file runs in the browser
-(Vite SPAs, Astro islands), in Node 24 (Fastify APIs, scripts) and in an Astro build. Plain JavaScript with
+(Vite SPAs, Astro islands), in Node 26 (Fastify APIs, scripts) and in an Astro build. Plain JavaScript with
 TypeScript types included.
 
 Each area is its own subpath, so a page that formats money doesn't load the CSV writer. There is no root import.
 
-| Subpath                  | What it does                                                                     |
-| ------------------------ | -------------------------------------------------------------------------------- |
-| `@coderize/format/date`  | today, day ranges and wall-clock times in America/Detroit (or any zone); display |
-| `@coderize/format/money` | integer cents to `$1,234.56`, typed dollars to cents                             |
-| `@coderize/format/csv`   | rows to CSV with RFC 4180 quoting, the formula-injection guard and a UTF-8 BOM   |
-| `@coderize/format/phone` | 10-digit US numbers with extensions: normalise, store, display, `tel:` links     |
-| `@coderize/format/slug`  | title to URL slug, for new slugs only                                            |
+| Subpath                    | What it does                                                                     |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| `@coderizehq/format/date`  | today, day ranges and wall-clock times in America/Detroit (or any zone); display |
+| `@coderizehq/format/money` | integer cents to `$1,234.56`, typed dollars to cents                             |
+| `@coderizehq/format/csv`   | rows to CSV with RFC 4180 quoting, the formula-injection guard and a UTF-8 BOM   |
+| `@coderizehq/format/phone` | 10-digit US numbers with extensions: normalise, store, display, `tel:` links     |
+| `@coderizehq/format/slug`  | title to URL slug, for new slugs only                                            |
 
-The card-fee gross-up ("cover the processing fee") is not here: it lives in `@coderize/stripe/fees`, next to the
+The card-fee gross-up ("cover the processing fee") is not here: it lives in `@coderizehq/stripe/fees`, next to the
 Stripe code it has to agree with.
 
-## `@coderize/format/date`
+## `@coderizehq/format/date`
 
 Every function takes the time zone as a parameter, defaulting to `America/Detroit` (`DEFAULT_TIME_ZONE`). Nothing
 reads the zone of the device or server it runs on: the tests run the whole suite under UTC, America/Detroit and
 Asia/Kolkata to hold that.
 
 ```js
-import { dayRangeUtc, formatDateTime, todayIn, zonedWallTimeToUtc } from '@coderize/format/date'
+import { dayRangeUtc, formatDateTime, todayIn, zonedWallTimeToUtc } from '@coderizehq/format/date'
 
 todayIn() // '2026-11-03' at 9 pm in Detroit, when the UTC day is already the 4th
 const { start, end } = dayRangeUtc(todayIn()) // tonight's events: start <= startsAt < end
@@ -108,13 +108,13 @@ These are `Temporal`'s "compatible" rules.
 - Output always uses plain spaces. Some ICU versions put a narrow no-break space before AM/PM, which made an Astro
   build and the browser hydrating it disagree.
 
-## `@coderize/format/money`
+## `@coderizehq/format/money`
 
 Money is integer cents in the database, the API and the browser. Only a screen turns cents into dollars, and only
 an input box turns dollars back into cents. Nothing here does float arithmetic.
 
 ```js
-import { centsToInput, formatCents, parseDollarsToCents } from '@coderize/format/money'
+import { centsToInput, formatCents, parseDollarsToCents } from '@coderizehq/format/money'
 
 formatCents(123456) // '$1,234.56'
 formatCents(-1234) // '-$12.34'
@@ -134,18 +134,18 @@ parseDollarsToCents('1.234') // null: three places, maybe a European thousands s
   thousands groups (`1,23`), a trailing point, words, exponents, `+`, two signs, a negative unless allowed, or an
   amount too large to be exact. It takes only a string: pass the input's text, never a parsed number.
 
-## `@coderize/format/csv`
+## `@coderizehq/format/csv`
 
 ```js
-import { toCsv } from '@coderize/format/csv'
+import { toCsv } from '@coderizehq/format/csv'
 
 const csv = toCsv(
   [
     { key: 'name', label: 'Name' },
     'email', // key and label
-    { label: 'Amount', value: (row) => (row.amountCents / 100).toFixed(2) }
+    { label: 'Amount', value: (row) => (row.amountCents / 100).toFixed(2) },
   ],
-  rows
+  rows,
 )
 reply
   .header('content-type', 'text/csv; charset=utf-8')
@@ -165,7 +165,7 @@ reply
   the other subpaths) when the reader wants them as text.
 - `rows` is any iterable. `csvCell(value, { guard })` is the single-cell writer, for a streaming export.
 
-## `@coderize/format/phone`
+## `@coderizehq/format/phone`
 
 Promoted from Xceptional Heroes' `@xh/phone`. A standard number is 10 digits, or 11 starting with 1 (the 1 is
 dropped), with any punctuation, optionally followed by an extension (`x23`, `ext. 23`, `extension 23`, `#23`).
@@ -185,10 +185,10 @@ at**: it is stored as typed, shown as typed and reported as `TO_FIX`.
 
 `formatPhoneAsTyped` keeps ten digits, so an extension needs its own field when a form masks input.
 
-## `@coderize/format/slug`
+## `@coderizehq/format/slug`
 
 ```js
-import { slugify } from '@coderize/format/slug'
+import { slugify } from '@coderizehq/format/slug'
 
 slugify('Café Rock & Roll Night') // 'cafe-rock-and-roll-night'
 slugify("Joe's Pizza") // 'joes-pizza'

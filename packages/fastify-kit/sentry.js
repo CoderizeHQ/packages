@@ -16,7 +16,7 @@ export const dataCollection = Object.freeze({
   genAI: { inputs: false, outputs: false },
   databaseQueryData: false,
   queues: false,
-  graphQL: { document: false, variables: false }
+  graphQL: { document: false, variables: false },
 })
 
 /**
@@ -40,7 +40,7 @@ export function initSentry(options = {}) {
     integrations: [Sentry.fastifyIntegration()],
     tracesSampleRate: environment === 'production' ? 0.1 : 1.0,
     dataCollection: structuredClone(dataCollection),
-    ...options
+    ...options,
   })
   return true
 }

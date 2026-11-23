@@ -54,7 +54,7 @@ export function parseOrigins(origins) {
 
 async function securityPluginsPlugin(
   app,
-  { origins, cors: corsOptions = {}, helmet: helmetOptions, rateLimit: limit } = {}
+  { origins, cors: corsOptions = {}, helmet: helmetOptions, rateLimit: limit } = {},
 ) {
   const origin = parseOrigins(origins)
   if (corsOptions && 'origin' in corsOptions) {
@@ -87,5 +87,5 @@ async function securityPluginsPlugin(
  */
 export const securityPlugins = fp(securityPluginsPlugin, {
   fastify: '5.x',
-  name: '@coderize/fastify-kit/security'
+  name: '@coderizehq/fastify-kit/security',
 })

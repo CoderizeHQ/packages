@@ -27,13 +27,13 @@ export function subscriptionPeriod(subscription) {
   if (latest) {
     return {
       start: toDate(latest.current_period_start ?? subscription.current_period_start),
-      end: toDate(latest.current_period_end)
+      end: toDate(latest.current_period_end),
     }
   }
 
   return {
     start: toDate(subscription?.current_period_start),
-    end: toDate(subscription?.current_period_end)
+    end: toDate(subscription?.current_period_end),
   }
 }
 

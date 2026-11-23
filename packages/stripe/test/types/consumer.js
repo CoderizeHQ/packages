@@ -1,7 +1,5 @@
-// Type-checked by `tsc -p test/types` in `pnpm test`, as a TypeScript app would import the package
-// (allsteeloffroad-com-web, the coderize-dev-mono portal). Nothing here runs.
-import type Stripe from 'stripe'
-
+// Type-checked by `tsc -p test/types` in `pnpm test` (checkJs), as an app would import the package: a TypeScript app
+// (a Next.js route) or JavaScript checked against the package's .d.ts files. Nothing here runs.
 import {
   checkoutShipping,
   checkStripeVersion,
@@ -19,37 +17,52 @@ import {
   StripeWebhookError,
   StripeWebhookHandlerError,
   subscriptionPeriod,
-  verifyWebhook
-} from '@coderize/stripe'
-import { type CardFee, cardFeeCents, type GrossUp, grossUpForCardFee, US_CARD_FEE } from '@coderize/stripe/fees'
+  verifyWebhook,
+} from '@coderizehq/stripe'
+import { cardFeeCents, grossUpForCardFee, US_CARD_FEE } from '@coderizehq/stripe/fees'
+
+/** @import Stripe from 'stripe' */
+/** @import { CardFee, GrossUp } from '@coderizehq/stripe/fees' */
 
 // The browser-safe subpath, as a checkout page shows the fee the API will charge.
-const fee: number = cardFeeCents(5000)
-const { netCents, feeCents, totalCents }: GrossUp = grossUpForCardFee(5000, { rate: 0.022 })
-const usCard: Readonly<CardFee> = US_CARD_FEE
+/** @type {number} */
+const fee = cardFeeCents(5000)
+/** @type {GrossUp} */
+const { netCents, feeCents, totalCents } = grossUpForCardFee(5000, { rate: 0.022 })
+/** @type {Readonly<CardFee>} */
+const usCard = US_CARD_FEE
 // @ts-expect-error the amount is integer cents, never a dollar string
 cardFeeCents('50.00')
 export const shown = [fee, netCents, feeCents, totalCents, usCard.rate]
 
-const pinned: '2026-10-28.endive' = STRIPE_API_VERSION
-const reviewed: string[] = REVIEWED_SDK_DEFAULTS.map((r) => `${r.version} ${r.decision}`)
+/** @type {'2026-10-28.endive'} */
+const pinned = STRIPE_API_VERSION
+/** @type {string[]} */
+const reviewed = REVIEWED_SDK_DEFAULTS.map((r) => `${r.version} ${r.decision}`)
 
-const stripe: Stripe = createStripe('sk_test_x', { timeout: 20_000, maxNetworkRetries: 3 })
+/** @type {Stripe} */
+const stripe = createStripe('sk_test_x', { timeout: 20_000, maxNetworkRetries: 3 })
 createStripe('sk_test_x', { apiVersion: '2026-10-28.endive' })
 // @ts-expect-error another API version is refused, the 1.x pin included
 createStripe('sk_test_x', { apiVersion: '2026-08-26.dahlia' })
 
 const guard = checkStripeVersion()
-const failed: string[] = guard.checks.filter((c) => !c.ok).map((c) => c.id)
+/** @type {string[]} */
+const failed = guard.checks.filter((c) => !c.ok).map((c) => c.id)
 
-export async function POST(request: Request): Promise<Response> {
-  let event: Stripe.Event
+/**
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+export async function POST(request) {
+  /** @type {Stripe.Event} */
+  let event
   try {
     event = verifyWebhook({
       stripe,
       rawBody: await request.text(),
       signature: request.headers.get('stripe-signature'),
-      secret: process.env.STRIPE_WEBHOOK_SECRET
+      secret: process.env.STRIPE_WEBHOOK_SECRET,
     })
   } catch (err) {
     if (err instanceof StripeWebhookError) return new Response(err.code, { status: err.statusCode })
@@ -58,16 +71,21 @@ export async function POST(request: Request): Promise<Response> {
 
   const { duplicate } = await processEventOnce(
     event,
-    async (e, tx: { log: string[] } | undefined) => {
+    async (e, /** @type {{ log: string[] } | undefined} */ tx) => {
       const handled = await routeEvent(
         e,
         {
           'invoice.paid': async (paid) => {
-            const invoice: Stripe.Invoice = paid.data.object
-            const sub: string | null = invoiceSubscriptionId(invoice)
-            const start: Date | null = invoicePeriodStart(invoice)
-            const intent: string | null = await invoicePaymentIntentId(stripe, invoice)
-            const charge: string | null = invoiceChargeId(invoice)
+            /** @type {Stripe.Invoice} */
+            const invoice = paid.data.object
+            /** @type {string | null} */
+            const sub = invoiceSubscriptionId(invoice)
+            /** @type {Date | null} */
+            const start = invoicePeriodStart(invoice)
+            /** @type {string | null} */
+            const intent = await invoicePaymentIntentId(stripe, invoice)
+            /** @type {string | null} */
+            const charge = invoiceChargeId(invoice)
             tx?.log.push(`${sub} ${start?.toISOString()} ${intent} ${charge}`)
           },
           'customer.subscription.updated': (updated) => {
@@ -77,29 +95,30 @@ export async function POST(request: Request): Promise<Response> {
           'checkout.session.completed': (completed) => {
             const shipTo = checkoutShipping(completed.data.object)
             tx?.log.push(shipTo?.address?.postal_code ?? '')
-          }
+          },
         },
-        tx
+        tx,
       )
       if (!handled) console.log(`unhandled ${e.type}`)
     },
     {
       record: async () => true,
-      transaction: async (work) => work({ log: [] })
-    }
+      transaction: async (work) => work({ log: [] }),
+    },
   )
 
   return Response.json({ received: true, duplicate, pinned, reviewed, failed })
 }
 
-// The one-call webhook, as allsteeloffroad-com-web's route would use it.
-declare const prisma: {
-  $transaction: Function
-  stripeEvent: object
-  payment: { create(args: object): Promise<{ id: string }> }
-}
+// The one-call webhook, as an app's webhook route would use it.
+/** @type {{ $transaction: Function, stripeEvent: object, payment: { create(args: object): Promise<{ id: string }> } }} */
+const prisma = { $transaction: () => {}, stripeEvent: {}, payment: { create: async () => ({ id: 'pay_1' }) } }
 
-export async function handled(request: Request): Promise<Response> {
+/**
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+export async function handled(request) {
   const { status, body } = await handleStripeWebhook({
     stripe,
     rawBody: await request.text(),
@@ -109,15 +128,17 @@ export async function handled(request: Request): Promise<Response> {
     storeOptions: { model: 'stripeEvent' },
     handlers: {
       'invoice.paid': async (event, { tx, after, log }) => {
-        const invoice: Stripe.Invoice = event.data.object
-        const payment = await (tx as typeof prisma).payment.create({ data: { invoice: invoice.id } })
+        /** @type {Stripe.Invoice} */
+        const invoice = event.data.object
+        const payment = await /** @type {typeof prisma} */ (tx).payment.create({ data: { invoice: invoice.id } })
         after(() => log.info({ id: payment.id }, 'receipt'))
       },
       'checkout.session.completed': (event) => {
-        const session: Stripe.Checkout.Session = event.data.object
+        /** @type {Stripe.Checkout.Session} */
+        const session = event.data.object
         return session.id
-      }
-    }
+      },
+    },
   })
   const store = prismaEventStore(prisma, { idField: 'id' })
   await store.transaction(async () => store.record('evt_1', { id: 'evt_1' }, undefined))
@@ -125,9 +146,15 @@ export async function handled(request: Request): Promise<Response> {
 }
 
 // A failed handler rejects with a 500 that keeps the original error, as an app's own catch would read it.
-export function describeFailure(err: unknown): string | null {
+/**
+ * @param {unknown} err
+ * @returns {string | null}
+ */
+export function describeFailure(err) {
   if (!(err instanceof StripeWebhookHandlerError)) return null
-  const status: 500 = err.statusCode
-  const code: 'HANDLER_FAILED' = err.code
+  /** @type {500} */
+  const status = err.statusCode
+  /** @type {'HANDLER_FAILED'} */
+  const code = err.code
   return `${status} ${code} ${err.eventType ?? ''} ${err.eventId ?? ''} ${String(err.cause)}`
 }

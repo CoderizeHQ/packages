@@ -4,25 +4,25 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@capacitor/core', () => ({
   Capacitor: { getPlatform: () => 'web', isNativePlatform: () => false },
-  registerPlugin: () => ({})
+  registerPlugin: () => ({}),
 }))
 
 const SUBPATHS = {
   'cloud-save': { file: 'cloudSave', exports: ['createCloudSave'] },
-  haptics: { file: 'haptics', exports: ['buzz'] }
+  haptics: { file: 'haptics', exports: ['buzz'] },
 }
 
 // Imported by name through the package's own exports map, as a game would.
 const MODULES = {
-  'cloud-save': () => import('@coderize/game-kit/cloud-save'),
-  haptics: () => import('@coderize/game-kit/haptics')
+  'cloud-save': () => import('@coderizehq/game-kit/cloud-save'),
+  haptics: () => import('@coderizehq/game-kit/haptics'),
 }
 
 const read = (file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8')
 const declared = (types) => [...types.matchAll(/^export declare (?:const|function|class) (\w+)/gm)].map((m) => m[1])
 
 describe('package exports', () => {
-  it.each(Object.entries(SUBPATHS))('serves @coderize/game-kit/%s', async (name, { exports }) => {
+  it.each(Object.entries(SUBPATHS))('serves @coderizehq/game-kit/%s', async (name, { exports }) => {
     expect(Object.keys(await MODULES[name]()).sort()).toEqual(exports)
   })
 
@@ -30,7 +30,7 @@ describe('package exports', () => {
     'declares a type for every runtime export of %s',
     async (_name, { file, exports }) => {
       expect(declared(await read(`${file}.d.ts`)).sort()).toEqual(exports)
-    }
+    },
   )
 
   it('maps each subpath to its module and types, and publishes them', async () => {
@@ -76,7 +76,7 @@ describe('the Android plugin', () => {
 
   it('answers the three calls the JavaScript side makes', async () => {
     const methods = [...(await java()).matchAll(/@PluginMethod\s+public void (\w+)\(PluginCall call\)/g)].map(
-      (m) => m[1]
+      (m) => m[1],
     )
     expect(methods).toEqual(['status', 'load', 'save'])
   })
@@ -84,10 +84,10 @@ describe('the Android plugin', () => {
   it('declares play-services-games-v2, taking the version from the game when it sets one', async () => {
     const gradle = await read('android/build.gradle')
     expect(gradle).toContain(
-      'implementation "com.google.android.gms:play-services-games-v2:$playServicesGamesV2Version"'
+      'implementation "com.google.android.gms:play-services-games-v2:$playServicesGamesV2Version"',
     )
     expect(gradle).toMatch(
-      /project\.hasProperty\('playServicesGamesV2Version'\) \? rootProject\.ext\.playServicesGamesV2Version : '22\.1\.0'/
+      /project\.hasProperty\('playServicesGamesV2Version'\) \? rootProject\.ext\.playServicesGamesV2Version : '22\.1\.0'/,
     )
   })
 })

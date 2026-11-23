@@ -50,7 +50,7 @@ describe('verifyTurnstile', () => {
     ['no token', undefined],
     ['an empty token', ''],
     ['a token that is not a string', { a: 1 }],
-    ['an oversized token', 'x'.repeat(2049)]
+    ['an oversized token', 'x'.repeat(2049)],
   ])('refuses %s without asking Cloudflare', async (_label, token) => {
     expect(await verifyTurnstile(token)).toEqual({ ok: false, reason: 'MISSING_TOKEN' })
     expect(siteverify).not.toHaveBeenCalled()
@@ -62,7 +62,7 @@ describe('verifyTurnstile', () => {
     expect(await verifyTurnstile(TOKEN)).toEqual({
       ok: false,
       reason: 'REJECTED',
-      errorCodes: ['timeout-or-duplicate']
+      errorCodes: ['timeout-or-duplicate'],
     })
   })
 
@@ -83,7 +83,7 @@ describe('verifyTurnstile', () => {
     expect(await verifyTurnstile(TOKEN, { hostname: ['www.example.com', 'EXAMPLE.com'] })).toEqual({ ok: true })
     expect(await verifyTurnstile(TOKEN, { hostname: 'other.example' })).toEqual({
       ok: false,
-      reason: 'HOSTNAME_MISMATCH'
+      reason: 'HOSTNAME_MISMATCH',
     })
   })
 

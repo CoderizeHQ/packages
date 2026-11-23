@@ -10,14 +10,14 @@ export function appWithLogs(options = {}, loggerOptions = {}) {
   const raw = []
   const app = Fastify({
     ...options,
-    logger: { level: 'trace', ...loggerOptions, stream: { write: (line) => raw.push(line) } }
+    logger: { level: 'trace', ...loggerOptions, stream: { write: (line) => raw.push(line) } },
   })
   return {
     app,
     raw,
     get lines() {
       return raw.map((line) => JSON.parse(line))
-    }
+    },
   }
 }
 

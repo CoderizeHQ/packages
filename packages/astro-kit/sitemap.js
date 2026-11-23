@@ -42,9 +42,10 @@ export function sitemapOptions({ exclude = [], lastmod = 'build', skipNoindex = 
     serialize(item) {
       const url = canonicalUrl(item.url)
       const date = lastmodFor(url)
-      const { lastmod: _dropped, ...rest } = item
+      const rest = { ...item }
+      delete rest.lastmod
       return date === undefined ? { ...rest, url } : { ...rest, url, lastmod: date }
-    }
+    },
   }
 }
 

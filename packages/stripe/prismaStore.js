@@ -27,8 +27,8 @@ export function prismaEventStore(
     model = 'stripeEvent',
     idField = 'id',
     data = (event) => ({ type: event.type }),
-    transactionOptions = { maxWait: 5000, timeout: 20000 }
-  } = {}
+    transactionOptions = { maxWait: 5000, timeout: 20000 },
+  } = {},
 ) {
   if (typeof prisma?.$transaction !== 'function') {
     throw new TypeError('prismaEventStore: pass the PrismaClient')
@@ -42,6 +42,6 @@ export function prismaEventStore(
       (await prisma[model].findUnique({ where: { [idField]: id }, select: { [idField]: true } })) !== null,
     // Without a transaction (record-after mode) the id goes in through the client itself.
     record: (id, event, tx) => (tx ?? prisma)[model].create({ data: { ...data(event), [idField]: id } }),
-    transaction: (work) => prisma.$transaction(work, transactionOptions)
+    transaction: (work) => prisma.$transaction(work, transactionOptions),
   }
 }

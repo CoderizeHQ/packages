@@ -13,9 +13,9 @@ const renewal = {
   amount_paid: 2606,
   parent: {
     type: 'subscription_details',
-    subscription_details: { subscription: 'sub_renewal', metadata: {} }
+    subscription_details: { subscription: 'sub_renewal', metadata: {} },
   },
-  lines: { data: [{ period: { start: 1788220800, end: 1790812800 } }] }
+  lines: { data: [{ period: { start: 1788220800, end: 1790812800 } }] },
 }
 
 // The same invoice in the pre-basil shape an older endpoint sends.
@@ -24,12 +24,12 @@ const legacyRenewal = {
   subscription: 'sub_legacy',
   payment_intent: 'pi_legacy',
   charge: 'ch_legacy',
-  lines: { data: [{ period: { start: 1788220800, end: 1790812800 } }] }
+  lines: { data: [{ period: { start: 1788220800, end: 1790812800 } }] },
 }
 
 const paidThroughIntent = (intent, status = 'paid') => ({
   status,
-  payment: { type: 'payment_intent', payment_intent: intent }
+  payment: { type: 'payment_intent', payment_intent: intent },
 })
 
 /** A client whose invoices.retrieve answers with `full` and records the call. */
@@ -107,7 +107,7 @@ describe('invoicePaymentIntentId', () => {
     const recorded = { status: 'paid', payment: { type: 'payment_record', payment_record: 'pr_1' } }
     expect(await invoicePaymentIntentId(null, { payments: { data: [recorded] } })).toBeNull()
     expect(await invoicePaymentIntentId(null, { payments: { data: [recorded, paidThroughIntent('pi_paid')] } })).toBe(
-      'pi_paid'
+      'pi_paid',
     )
   })
 
@@ -143,10 +143,10 @@ describe('invoiceChargeId', () => {
         data: [
           {
             status: 'paid',
-            payment: { type: 'payment_intent', payment_intent: { id: 'pi_1', latest_charge: 'ch_latest' } }
-          }
-        ]
-      }
+            payment: { type: 'payment_intent', payment_intent: { id: 'pi_1', latest_charge: 'ch_latest' } },
+          },
+        ],
+      },
     }
     expect(invoiceChargeId(invoice)).toBe('ch_latest')
     invoice.payments.data[0].payment.payment_intent.latest_charge = { id: 'ch_expanded' }
@@ -158,9 +158,9 @@ describe('invoiceChargeId', () => {
       payments: {
         data: [
           { status: 'canceled', payment: { type: 'charge', charge: 'ch_failed' } },
-          { status: 'paid', payment: { type: 'charge', charge: 'ch_paid' } }
-        ]
-      }
+          { status: 'paid', payment: { type: 'charge', charge: 'ch_paid' } },
+        ],
+      },
     }
     expect(invoiceChargeId(invoice)).toBe('ch_paid')
   })

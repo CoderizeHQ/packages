@@ -12,7 +12,7 @@ const at = (seconds) => new Date(seconds * 1000)
 const currentSubscription = {
   id: 'sub_1',
   status: 'active',
-  items: { data: [{ id: 'si_1', current_period_start: START, current_period_end: END }] }
+  items: { data: [{ id: 'si_1', current_period_start: START, current_period_end: END }] },
 }
 
 // The pre-basil shape an older webhook endpoint still sends.
@@ -20,7 +20,7 @@ const legacySubscription = {
   id: 'sub_1',
   current_period_start: START,
   current_period_end: END,
-  items: { data: [{ id: 'si_1' }] }
+  items: { data: [{ id: 'si_1' }] },
 }
 
 describe('subscriptionPeriod', () => {
@@ -43,9 +43,9 @@ describe('subscriptionPeriod', () => {
         data: [
           { current_period_start: START, current_period_end: END },
           { current_period_start: START + 100, current_period_end: END + 100 },
-          { current_period_start: START - 100, current_period_end: END - 100 }
-        ]
-      }
+          { current_period_start: START - 100, current_period_end: END - 100 },
+        ],
+      },
     }
     expect(subscriptionPeriod(twoItems)).toEqual({ start: at(START + 100), end: at(END + 100) })
   })

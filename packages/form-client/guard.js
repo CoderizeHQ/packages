@@ -31,6 +31,6 @@ export function createFormGuard({ form } = {}) {
       const input = form?.elements?.namedItem(HONEYPOT_FIELD)
       const website = input && typeof input === 'object' && 'value' in input ? String(input.value ?? '') : trap
       return { website, _fillMs: Math.max(0, Math.round(performance.now() - shownAt)) }
-    }
+    },
   }
 }

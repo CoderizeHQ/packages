@@ -49,11 +49,11 @@ describe('sitemapOptions().serialize', () => {
   it('takes lastmod from a function, and drops it for none', () => {
     const { serialize } = sitemapOptions({
       distDir: dist,
-      lastmod: (url) => (url.endsWith('/news') ? new Date('2026-10-01T00:00:00Z') : undefined)
+      lastmod: (url) => (url.endsWith('/news') ? new Date('2026-10-01T00:00:00Z') : undefined),
     })
     expect(serialize({ url: 'https://example.com/news/' })).toEqual({
       url: 'https://example.com/news',
-      lastmod: '2026-10-01T00:00:00.000Z'
+      lastmod: '2026-10-01T00:00:00.000Z',
     })
     expect(serialize({ url: 'https://example.com/other/', lastmod: 'x' })).toEqual({ url: 'https://example.com/other' })
   })
@@ -63,7 +63,7 @@ describe('sitemapOptions().serialize', () => {
     expect(serialize({ url: 'https://example.com/a/', changefreq: 'weekly', links: [] })).toEqual({
       url: 'https://example.com/a',
       changefreq: 'weekly',
-      links: []
+      links: [],
     })
   })
 

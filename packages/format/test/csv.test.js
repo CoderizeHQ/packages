@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { csvCell, toCsv } from '@coderize/format/csv'
+import { csvCell, toCsv } from '@coderizehq/format/csv'
 
 const BOM = String.fromCharCode(0xfeff)
 
@@ -28,7 +28,7 @@ describe('csvCell', () => {
     'guards %j against running as a formula',
     (value) => {
       expect(csvCell(value).replace(/^"/, '')).toMatch(/^'/)
-    }
+    },
   )
 
   it('keeps plain numbers, negative amounts included, as numbers', () => {
@@ -49,7 +49,7 @@ describe('csvCell', () => {
 describe('toCsv', () => {
   const rows = [
     { name: 'José Núñez', email: 'jose@example.com', amount: '-5.00' },
-    { name: '=HYPERLINK("x")', email: null, amount: '12.50' }
+    { name: '=HYPERLINK("x")', email: null, amount: '12.50' },
   ]
 
   it('writes a BOM, a header and CRLF-terminated lines', () => {
@@ -57,9 +57,9 @@ describe('toCsv', () => {
       [
         { key: 'name', label: 'Name' },
         { key: 'email', label: 'Email' },
-        { key: 'amount', label: 'Amount' }
+        { key: 'amount', label: 'Amount' },
       ],
-      rows
+      rows,
     )
     expect(csv).toBe(`${BOM}Name,Email,Amount\r\nJosé Núñez,jose@example.com,-5.00\r\n"'=HYPERLINK(""x"")",,12.50\r\n`)
   })

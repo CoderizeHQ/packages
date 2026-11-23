@@ -17,7 +17,7 @@ if (!result.ok) process.exitCode = 1
 if (result.checks.some((c) => c.id === 'sdk-default' && !c.ok)) {
   console.log(
     `\nThe installed stripe ${result.sdkVersion ?? '(unknown)'} defaults to API version ${result.sdkDefault ?? '(unknown)'}.\n` +
-      'This release of @coderize/stripe has not reviewed it. Do not pin around it in the app: update\n' +
-      '@coderize/stripe to a release that lists it, or hold stripe at the version it had until one exists.'
+      'This release of @coderizehq/stripe has not reviewed it. Do not pin around it in the app: update\n' +
+      '@coderizehq/stripe to a release that lists it, or hold stripe at the version it had until one exists.',
   )
 }

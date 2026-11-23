@@ -1,5 +1,5 @@
-// Sentry and the security preset are not here: they live at '@coderize/fastify-kit/sentry' and
-// '@coderize/fastify-kit/security', so an API without @sentry/node or the @fastify plugins can import
+// Sentry and the security preset are not here: they live at '@coderizehq/fastify-kit/sentry' and
+// '@coderizehq/fastify-kit/security', so an API without @sentry/node or the @fastify plugins can import
 // everything else.
 export { AppError, createErrorHandler, errorFacts, INTERNAL_ERROR_MESSAGE } from './errors.js'
 export { requireEnv } from './env.js'

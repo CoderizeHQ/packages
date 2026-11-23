@@ -10,7 +10,7 @@ const presigned = () =>
     url: 'https://uploads.example.test/',
     fields: { bucket: 'uploads', key: KEY, 'Content-Type': 'application/pdf', Policy: 'e30=', 'X-Amz-Signature': 'ab' },
     key: KEY,
-    maxBytes: 26214400
+    maxBytes: 26214400,
   })
 // S3 answers a successful POST with 204 and no body.
 const stored = () => new Response(null, { status: 204 })
@@ -51,7 +51,7 @@ describe('uploadFile', () => {
     await expect(uploadFile({ endpoint: ENDPOINT, client: 'clientkey', file: pdf() })).resolves.toEqual({
       ok: false,
       status: 415,
-      message: "That type of file can't be uploaded here. Allowed: PNG, PDF."
+      message: "That type of file can't be uploaded here. Allowed: PNG, PDF.",
     })
   })
 
@@ -66,14 +66,14 @@ describe('uploadFile', () => {
     mockFetch(presigned(), new TypeError('Failed to fetch'))
     await expect(uploadFile({ endpoint: ENDPOINT, client: 'clientkey', file: pdf() })).resolves.toMatchObject({
       ok: false,
-      status: 0
+      status: 0,
     })
   })
 
   it('throws for a missing endpoint', async () => {
     mockFetch()
     await expect(uploadFile({ endpoint: undefined, client: 'clientkey', file: pdf() })).rejects.toThrow(
-      /endpoint is missing/
+      /endpoint is missing/,
     )
   })
 
@@ -98,7 +98,7 @@ describe('uploadFile', () => {
 
     await expect(uploadFile({ endpoint: ENDPOINT, client: 'clientkey', file: pdf(), onProgress })).resolves.toEqual({
       ok: true,
-      key: KEY
+      key: KEY,
     })
     expect(sent[0]).toMatchObject({ method: 'POST', url: 'https://uploads.example.test/' })
     expect(sent[0].body.get('file').name).toBe('artwork.pdf')
@@ -117,8 +117,8 @@ describe('submitForm with files', () => {
         fields: { name: 'Jane' },
         files: [pdf()],
         uploads: ['clientkey/11111111-1111-4111-8111-111111111111/logo.png'],
-        guard: fixedGuard()
-      })
+        guard: fixedGuard(),
+      }),
     ).resolves.toEqual({ ok: true })
 
     expect(sentBody(fetch, 2).uploads).toEqual(['clientkey/11111111-1111-4111-8111-111111111111/logo.png', KEY])
@@ -141,7 +141,7 @@ describe('submitForm with files', () => {
     const fetch = mockFetch(json(413, { error: 'That file is over 25.0 MB. Please send a smaller one.' }))
 
     await expect(
-      submitForm({ endpoint: ENDPOINT, client: 'clientkey', fields: { name: 'Jane' }, files: [pdf()] })
+      submitForm({ endpoint: ENDPOINT, client: 'clientkey', fields: { name: 'Jane' }, files: [pdf()] }),
     ).resolves.toEqual({ ok: false, status: 413, message: 'That file is over 25.0 MB. Please send a smaller one.' })
     expect(fetch).toHaveBeenCalledTimes(1)
   })

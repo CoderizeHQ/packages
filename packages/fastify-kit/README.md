@@ -1,19 +1,19 @@
-# @coderize/fastify-kit
+# @coderizehq/fastify-kit
 
-The pieces every CoderizeDEV Fastify API carries a copy of: health checks, the error handler, the Caddy
+The pieces every Coderize Fastify API carries a copy of: health checks, the error handler, the Caddy
 trust-proxy function, logger options, the Sentry setup, the CORS/helmet/rate-limit preset, the raw body a
 webhook needs, server start and shutdown, the startup env check and Turnstile verification. Each one works
 on its own, so an API can move onto them one at a time.
 
 ```bash
-pnpm add @coderize/fastify-kit
+pnpm add @coderizehq/fastify-kit
 pnpm add @sentry/node      # only if the API reports to Sentry
-pnpm add @fastify/cors @fastify/helmet @fastify/rate-limit   # only for @coderize/fastify-kit/security
+pnpm add @fastify/cors @fastify/helmet @fastify/rate-limit   # only for @coderizehq/fastify-kit/security
 pnpm add -D pino-pretty    # pretty logs when NODE_ENV=development
 ```
 
-Peer dependencies: `fastify` 5; `@sentry/node` 11 for `@coderize/fastify-kit/sentry` only; `@fastify/cors`
-11, `@fastify/helmet` 13 and `@fastify/rate-limit` 11 for `@coderize/fastify-kit/security` only;
+Peer dependencies: `fastify` 5; `@sentry/node` 11 for `@coderizehq/fastify-kit/sentry` only; `@fastify/cors`
+11, `@fastify/helmet` 13 and `@fastify/rate-limit` 11 for `@coderizehq/fastify-kit/security` only;
 `pino-pretty` 13 for development logs only. The main entry loads none of them, so an API without them imports
 the rest freely.
 
@@ -21,7 +21,7 @@ the rest freely.
 
 ```js
 // src/lib/env.js: imported first, so a missing setting stops the app before anything else runs
-import { requireEnv } from '@coderize/fastify-kit'
+import { requireEnv } from '@coderizehq/fastify-kit'
 
 requireEnv(['DATABASE_URL', 'JWT_SECRET', 'CORS_ORIGINS'])
 export const env = process.env
@@ -36,10 +36,10 @@ import {
   healthRoutes,
   loggerOptions,
   requestIdOptions,
-  trustCaddyHop
-} from '@coderize/fastify-kit'
-import { securityPlugins } from '@coderize/fastify-kit/security'
-import { captureException, initSentry } from '@coderize/fastify-kit/sentry'
+  trustCaddyHop,
+} from '@coderizehq/fastify-kit'
+import { securityPlugins } from '@coderizehq/fastify-kit/security'
+import { captureException, initSentry } from '@coderizehq/fastify-kit/sentry'
 
 import { env } from './lib/env.js'
 
@@ -49,7 +49,7 @@ export async function buildApp({ logger = loggerOptions() } = {}) {
   const app = Fastify({
     logger,
     ...requestIdOptions(),
-    trustProxy: trustCaddyHop
+    trustProxy: trustCaddyHop,
   })
 
   // BEFORE any register(): routes keep the error handler that existed when they were registered.
@@ -67,7 +67,7 @@ export async function buildApp({ logger = loggerOptions() } = {}) {
 
 ```js
 // src/server.js
-import { startServer } from '@coderize/fastify-kit'
+import { startServer } from '@coderizehq/fastify-kit'
 
 import { buildApp } from './app.js'
 
@@ -95,7 +95,7 @@ poll keeps Neon's compute awake around the clock.
 **Migrating:** delete `src/routes/health.js` and its `register()`, then:
 
 ```js
-import { healthRoutes } from '@coderize/fastify-kit'
+import { healthRoutes } from '@coderizehq/fastify-kit'
 
 await app.register(healthRoutes, { checkDatabase: (app) => app.prisma.$queryRaw`SELECT 1` })
 // no database: await app.register(healthRoutes)
@@ -153,7 +153,7 @@ SNS) retries a 5xx and drops the event on a 4xx, and nobody reads the body, so a
 event without anyone hearing of it. A route is a webhook route when its `config.webhook` is `true`:
 `rawJsonBody` sets that on every route registered after it in its plugin, and any other route can set it
 itself (`app.post('/hook', { config: { webhook: true } }, ...)`). `AppError`s and `errorCodes` entries are
-still answered as written there; `@coderize/stripe`'s `handleStripeWebhook` turns everything its handlers
+still answered as written there; `@coderizehq/stripe`'s `handleStripeWebhook` turns everything its handlers
 throw into a 500 of its own.
 
 Options:
@@ -173,8 +173,8 @@ Options:
     errorCodes: {
       FST_REQ_FILE_TOO_LARGE: tooLarge,
       FST_FILES_LIMIT: tooLarge,
-      P2003: { statusCode: 409, message: 'Still in use', code: 'IN_USE' }
-    }
+      P2003: { statusCode: 409, message: 'Still in use', code: 'IN_USE' },
+    },
   })
   ```
 
@@ -184,8 +184,8 @@ database facts) for an API's own `catch` blocks: `request.log.warn({ error: erro
 **Migrating:** delete `src/lib/errors.js` (or the inline `setErrorHandler` in `app.js`), then:
 
 ```js
-import { AppError, createErrorHandler } from '@coderize/fastify-kit'
-import { captureException } from '@coderize/fastify-kit/sentry' // or leave it out: no Sentry
+import { AppError, createErrorHandler } from '@coderizehq/fastify-kit'
+import { captureException } from '@coderizehq/fastify-kit/sentry' // or leave it out: no Sentry
 
 app.setErrorHandler(createErrorHandler({ captureException }))
 ```
@@ -198,10 +198,10 @@ bluecopperit's `AppError(message, code, statusCode)` takes its arguments the oth
 each throw site. coderize-dev and almontchamber have no handler today, so their 500 bodies change from the
 raw message to the fixed one.
 
-## Security preset: `@coderize/fastify-kit/security`
+## Security preset: `@coderizehq/fastify-kit/security`
 
 ```js
-import { securityPlugins } from '@coderize/fastify-kit/security'
+import { securityPlugins } from '@coderizehq/fastify-kit/security'
 
 await app.register(securityPlugins, { origins: process.env.CORS_ORIGINS })
 ```
@@ -244,8 +244,8 @@ A webhook's signature covers the exact bytes sent, so its route needs the raw bo
 `request.body`, and every other route keeps Fastify's parser untouched.
 
 ```js
-import { rawJsonBody } from '@coderize/fastify-kit'
-import { verifyWebhook } from '@coderize/stripe'
+import { rawJsonBody } from '@coderizehq/fastify-kit'
+import { verifyWebhook } from '@coderizehq/stripe'
 
 await app.register(
   async (webhooks) => {
@@ -255,12 +255,12 @@ await app.register(
         stripe,
         rawBody: request.rawBody,
         signature: request.headers['stripe-signature'],
-        secret: env.STRIPE_WEBHOOK_SECRET
+        secret: env.STRIPE_WEBHOOK_SECRET,
       })
       // ...
     })
   },
-  { prefix: '/webhooks' }
+  { prefix: '/webhooks' },
 )
 ```
 
@@ -322,12 +322,12 @@ there (icrotary, trafficticketbuddy): it puts the developer's `.env` in the test
 ## Turnstile: `verifyTurnstile`, `requireTurnstile`
 
 ```js
-import { requireTurnstile } from '@coderize/fastify-kit'
+import { requireTurnstile } from '@coderizehq/fastify-kit'
 
 app.post(
   '/contact',
   { preHandler: requireTurnstile({ action: 'contact', hostname: ['example.com', 'www.example.com'] }) },
-  handler
+  handler,
 )
 ```
 
@@ -367,7 +367,7 @@ Caddyfile must leave `X-Forwarded-For` alone.
 `package.json`, then:
 
 ```js
-import { trustCaddyHop } from '@coderize/fastify-kit'
+import { trustCaddyHop } from '@coderizehq/fastify-kit'
 
 Fastify({ trustProxy: trustCaddyHop })
 ```
@@ -428,7 +428,7 @@ one with other names.
 **Migrating:** delete `src/lib/logger.js`, or the logger object in `server.js`, then:
 
 ```js
-import { loggerOptions } from '@coderize/fastify-kit'
+import { loggerOptions } from '@coderizehq/fastify-kit'
 
 export async function buildApp({ logger = loggerOptions() } = {}) {
   const app = Fastify({ logger /* ... */ })
@@ -440,7 +440,7 @@ Replace a bare `logger: true` the same way: it skips redaction. xceptionalheroes
 own `redactUrl`. Their request lines lose `remoteAddress`, `remotePort` and `host`, and gain `hostname`,
 like the rest of the fleet.
 
-## Sentry: `@coderize/fastify-kit/sentry`
+## Sentry: `@coderizehq/fastify-kit/sentry`
 
 `initSentry(options)` initialises `@sentry/node` with the fleet defaults (DSN from `SENTRY_DSN`,
 environment from `NODE_ENV`, release from `SENTRY_RELEASE`, the Fastify integration, 10% tracing in
@@ -451,7 +451,7 @@ none. Any option passed overrides its default. `captureException` is Sentry's ow
 **Migrating:** replace the body of `src/lib/sentry.js` (keep the file if it is imported first):
 
 ```js
-import { initSentry } from '@coderize/fastify-kit/sentry'
+import { initSentry } from '@coderizehq/fastify-kit/sentry'
 
 initSentry()
 ```

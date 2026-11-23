@@ -18,9 +18,9 @@ export function sesInput(m) {
       ToAddresses: m.to,
       ...(m.cc.length ? { CcAddresses: m.cc } : {}),
       // The envelope is the only place Bcc goes, on both paths.
-      ...(m.bcc.length ? { BccAddresses: m.bcc } : {})
+      ...(m.bcc.length ? { BccAddresses: m.bcc } : {}),
     },
-    ...(m.configurationSet ? { ConfigurationSetName: m.configurationSet } : {})
+    ...(m.configurationSet ? { ConfigurationSetName: m.configurationSet } : {}),
   }
 
   if (m.attachments.length) {
@@ -36,11 +36,11 @@ export function sesInput(m) {
         Subject: { Data: m.subject, Charset: 'UTF-8' },
         Body: {
           ...(m.text ? { Text: { Data: m.text, Charset: 'UTF-8' } } : {}),
-          ...(m.html ? { Html: { Data: m.html, Charset: 'UTF-8' } } : {})
+          ...(m.html ? { Html: { Data: m.html, Charset: 'UTF-8' } } : {}),
         },
-        ...(m.headers.length ? { Headers: m.headers.map(([Name, Value]) => ({ Name, Value })) } : {})
-      }
-    }
+        ...(m.headers.length ? { Headers: m.headers.map(([Name, Value]) => ({ Name, Value })) } : {}),
+      },
+    },
   }
 }
 
@@ -57,7 +57,7 @@ function errorFacts(error) {
     requestId: e?.$metadata?.requestId,
     detail: String(e?.message ?? '')
       .replace(/[^\s<>()[\]"',;:]+@[^\s<>()[\]"',;:]+/g, '[address]')
-      .slice(0, 300)
+      .slice(0, 300),
   }
 }
 
@@ -98,9 +98,9 @@ export function createMailer({ from, configurationSet, client, region, logger = 
           ...(m.bcc.length ? { bcc: m.bcc } : {}),
           subject: m.subject,
           ...(m.attachments.length ? { attachments: m.attachments.map((a) => a.filename) } : {}),
-          body: (m.text ?? m.html ?? '').slice(0, PREVIEW_CHARS)
+          body: (m.text ?? m.html ?? '').slice(0, PREVIEW_CHARS),
         },
-        LOG_ONLY
+        LOG_ONLY,
       )
     }
     return { status: /** @type {const} */ ('logged'), id: null }

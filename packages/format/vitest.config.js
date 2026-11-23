@@ -10,7 +10,7 @@ export default defineConfig({
   test: {
     projects: ZONES.map((zone) => ({
       extends: true,
-      test: { name: zone, env: { TZ: zone } }
-    }))
-  }
+      test: { name: zone, env: { TZ: zone } },
+    })),
+  },
 })

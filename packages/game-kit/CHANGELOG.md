@@ -1,4 +1,6 @@
-# @coderize/game-kit
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/game-kit` at c60309c) and renamed `@coderizehq/game-kit`. The entries from 0.1.2 down are `@coderize/game-kit`'s, released from that repo with Changesets; its git history stays there.
 
 ## 0.1.2
 

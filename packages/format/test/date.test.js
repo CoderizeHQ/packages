@@ -13,8 +13,8 @@ import {
   utcDay,
   utcToZonedWallTime,
   zonedParts,
-  zonedWallTimeToUtc
-} from '@coderize/format/date'
+  zonedWallTimeToUtc,
+} from '@coderizehq/format/date'
 
 const HOUR = 60 * 60 * 1000
 const at = (iso) => new Date(iso)
@@ -204,7 +204,7 @@ describe('zonedParts', () => {
       hour: 21,
       minute: 0,
       second: 0,
-      weekday: 2
+      weekday: 2,
     })
     expect(zonedParts(at('2026-11-04T05:00:00Z')).hour).toBe(0)
   })

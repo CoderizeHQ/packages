@@ -69,7 +69,7 @@ export async function processEventOnce(event, handler, store, { mode = 'claim' }
     if (typeof store.transaction !== 'function') {
       throw new TypeError(
         'processEventOnce: claim mode needs store.transaction, so the event id commits with the work. ' +
-          "For work that cannot share a transaction, pass { mode: 'record-after' }."
+          "For work that cannot share a transaction, pass { mode: 'record-after' }.",
       )
     }
     if (store.seen && (await store.seen(event.id))) return { duplicate: true }

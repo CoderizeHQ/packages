@@ -1,18 +1,17 @@
 {
-  "name": "@coderize/format",
-  "version": "0.1.1",
-  "description": "Shared formatting rules for CoderizeDEV apps: Michigan-time dates, integer-cents money, CSV, US phone numbers and slugs, with no dependencies",
+  "name": "@coderizehq/format",
+  "version": "0.0.0",
+  "description": "Shared formatting rules for CoderizeHQ apps: Michigan-time dates, integer-cents money, CSV, US phone numbers and slugs, with no dependencies",
   "keywords": [
     "format",
-    "coderize"
+    "coderizehq"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
     "directory": "packages/format"
   },
-  "license": "UNLICENSED",
-  "author": "Coderize",
+  "license": "MIT",
   "type": "module",
   "exports": {
     "./csv": {
@@ -48,7 +47,8 @@
     "phone.d.ts",
     "phone.js",
     "slug.d.ts",
-    "slug.js"
+    "slug.js",
+    "LICENSE"
   ],
   "scripts": {
     "test": "vitest run && tsc -p test/types"
@@ -58,9 +58,10 @@
     "vitest": "^5.0.4"
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

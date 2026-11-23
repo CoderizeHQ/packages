@@ -29,7 +29,7 @@ export async function healthRoutes(app, { service = 'api', checkDatabase } = {})
   app.get('/health', { logLevel: 'silent' }, async () => ({
     status: 'ok',
     service,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   }))
 
   app.get('/health/ready', { logLevel: 'silent' }, async (request, reply) => {

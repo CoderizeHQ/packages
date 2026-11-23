@@ -1,4 +1,6 @@
-# @coderize/fastify-kit
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/fastify-kit` at c60309c) and renamed `@coderizehq/fastify-kit`. The entries from 0.4.0 down are `@coderize/fastify-kit`'s, released from that repo with Changesets; its git history stays there.
 
 ## 0.4.0
 

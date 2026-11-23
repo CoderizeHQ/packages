@@ -15,7 +15,7 @@ export const redactPaths = Object.freeze([
   'creditCard',
   'ssn',
   '*.password',
-  '*.token'
+  '*.token',
 ])
 
 /**
@@ -32,7 +32,7 @@ export const redactQueryParams = Object.freeze([
   'refresh_token',
   'password',
   'secret',
-  'signature'
+  'signature',
 ])
 
 /** What a redacted URL value becomes; the two APIs that masked URLs before the kit both wrote this. */
@@ -104,17 +104,17 @@ export function loggerOptions({ redact = [], redactQuery = [], redactPathAfter =
     redact: [...redactPaths, ...redact],
     serializers: {
       req: (request) => ({ method: request.method, url: maskUrl(request.url), hostname: request.hostname }),
-      res: (reply) => ({ statusCode: reply.statusCode })
+      res: (reply) => ({ statusCode: reply.statusCode }),
     },
     hooks: {
       // Fastify writes the raw URL into some messages, e.g. "Route GET:/feedback?token=... not found".
       logMethod(args, method) {
         return method.apply(
           this,
-          args.map((arg) => (typeof arg === 'string' ? maskUrl(arg) : arg))
+          args.map((arg) => (typeof arg === 'string' ? maskUrl(arg) : arg)),
         )
-      }
+      },
     },
-    ...(isDev && { transport: { target: 'pino-pretty' } })
+    ...(isDev && { transport: { target: 'pino-pretty' } }),
   }
 }

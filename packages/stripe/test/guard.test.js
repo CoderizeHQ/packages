@@ -47,7 +47,7 @@ describe('checkStripeVersion', () => {
     expect(result.checks.find((c) => c.id === 'sdk-default').detail).toMatchObject({
       sdk: '99.0.0',
       sdkDefault: '2027-01-27.fig',
-      pinned: STRIPE_API_VERSION
+      pinned: STRIPE_API_VERSION,
     })
   })
 

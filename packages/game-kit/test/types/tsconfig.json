@@ -6,7 +6,9 @@
     "lib": ["es2022", "dom"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "types": []
+    "types": [],
+    "allowJs": true,
+    "checkJs": true
   },
-  "files": ["consumer.ts"]
+  "files": ["consumer.js"]
 }

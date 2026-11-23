@@ -1,14 +1,14 @@
-# @coderize/game-kit
+# @coderizehq/game-kit
 
 The pieces Coderize's three Capacitor games (Sandy Streets, Train Track Puzzle and Railyard Out) each carried a copy
 of:
 
-- **`@coderize/game-kit/cloud-save`**: progress kept in a Google Play Games saved game, so it follows the player's
+- **`@coderizehq/game-kit/cloud-save`**: progress kept in a Google Play Games saved game, so it follows the player's
   Google account to a new phone or a reinstall. The JavaScript side and the Android plugin that goes with it.
-- **`@coderize/game-kit/haptics`**: `buzz()`, a short vibration on taps and big moments.
+- **`@coderizehq/game-kit/haptics`**: `buzz()`, a short vibration on taps and big moments.
 
 ```bash
-pnpm add @coderize/game-kit
+pnpm add @coderizehq/game-kit
 ```
 
 Peer dependencies: `@capacitor/core` 8, and `@capacitor/haptics` 8 only for `/haptics`. Plain JavaScript (ESM) with
@@ -18,7 +18,7 @@ game.
 ## Cloud save
 
 ```js
-import { createCloudSave } from '@coderize/game-kit/cloud-save'
+import { createCloudSave } from '@coderizehq/game-kit/cloud-save'
 
 import { mergeProgress } from './game/progress.js'
 import { LEVELS } from './game/levels.js'
@@ -26,7 +26,7 @@ import { LEVELS } from './game/levels.js'
 // One per run, at module level.
 const cloudSave = createCloudSave({
   describe: (save) => `Railyard Out: level ${save.unlocked}`,
-  merge: (device, cloud) => mergeProgress(device, cloud, LEVELS.length)
+  merge: (device, cloud) => mergeProgress(device, cloud, LEVELS.length),
 })
 
 const progress = mergeProgress(loadProgress(), await cloudSave.load(), LEVELS.length)
@@ -96,7 +96,7 @@ let slot = ''
 const plugin = {
   status: async () => ({ signedIn: true }),
   load: async () => ({ data: slot }),
-  save: async ({ data }) => (slot = data)
+  save: async ({ data }) => (slot = data),
 }
 const phone = createCloudSave({ describe, merge, plugin })
 const tablet = createCloudSave({ describe, merge, plugin })
@@ -108,7 +108,7 @@ Two instances on one fake slot are two devices on one Play Games account. The pa
 ## Haptics
 
 ```js
-import { buzz } from '@coderize/game-kit/haptics'
+import { buzz } from '@coderizehq/game-kit/haptics'
 
 buzz() // light
 buzz('medium')
@@ -124,7 +124,7 @@ own dependencies, as it does today, so `cap sync` adds that plugin too.
 One game at a time: move one, check it on the internal track (step 8), then the next. Use the package version that is
 live on npm.
 
-1. **Add the package:** `pnpm add @coderize/game-kit`.
+1. **Add the package:** `pnpm add @coderizehq/game-kit`.
 2. **JavaScript.** In `src/main.js`, replace the import of `./lib/cloudSave.js` with one `createCloudSave` at module
    level, then `loadCloudProgress()` becomes `cloudSave.load()` and `saveCloudProgress(progress, merge)` becomes
    `cloudSave.save(progress)`:
@@ -132,14 +132,14 @@ live on npm.
    ```js
    const cloudSave = createCloudSave({
      describe: (save) => `Train Track Puzzle: level ${save.unlocked}`,
-     merge: (local, saved) => mergeProgress(local, saved, LEVELS.length)
+     merge: (local, saved) => mergeProgress(local, saved, LEVELS.length),
    })
    ```
 
    Sandy Streets passes `merge: mergeProgress` (its merge takes no level count). Keep the description text exactly
    as the game's `describe()` wrote it.
 
-3. **Haptics** (Sandy Streets, Railyard Out): import `buzz` from `@coderize/game-kit/haptics` instead of
+3. **Haptics** (Sandy Streets, Railyard Out): import `buzz` from `@coderizehq/game-kit/haptics` instead of
    `./lib/haptics.js`.
 4. **Delete** what the package now holds:
    - `src/lib/cloudSave.js`;

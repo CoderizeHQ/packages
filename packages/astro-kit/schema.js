@@ -24,9 +24,10 @@ function withContext(data) {
     return {
       '@context': CONTEXT,
       '@graph': data.map((node) => {
-        const { '@context': _dropped, ...rest } = node
+        const rest = { ...node }
+        delete rest['@context']
         return rest
-      })
+      }),
     }
   }
   return data['@context'] ? data : { '@context': CONTEXT, ...data }
@@ -46,7 +47,7 @@ export function postalAddress(address) {
     addressLocality: city,
     addressRegion: region,
     postalCode,
-    addressCountry: country
+    addressCountry: country,
   })
 }
 
@@ -63,7 +64,7 @@ export function organization({ name, url, id, logo, sameAs, ...rest }) {
     url: absolute('organization', 'url', url),
     logo: logo && absolute('organization', 'logo', logo),
     sameAs: nonEmpty(sameAs),
-    ...rest
+    ...rest,
   })
 }
 
@@ -109,11 +110,11 @@ export function localBusiness({
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: days,
         opens,
-        closes
-      }))
+        closes,
+      })),
     ),
     sameAs: nonEmpty(sameAs),
-    ...rest
+    ...rest,
   })
 }
 
@@ -130,7 +131,7 @@ export function breadcrumbList({ site, items }) {
     itemListElement: items.map(({ name, path }, index) => {
       required('breadcrumbList item', { name, path })
       return { '@type': 'ListItem', position: index + 1, name, item: canonicalUrl(path, site) }
-    })
+    }),
   }
 }
 
@@ -147,7 +148,7 @@ export function faqPage({ items }) {
     mainEntity: items.map(({ question, answer }) => {
       required('faqPage item', { question, answer })
       return { '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } }
-    })
+    }),
   }
 }
 
@@ -194,7 +195,7 @@ export function event({
     eventStatus: eventStatus && schemaEnum(eventStatus),
     eventAttendanceMode: attendanceMode && schemaEnum(attendanceMode),
     offers,
-    ...rest
+    ...rest,
   })
 }
 
@@ -210,7 +211,7 @@ export function website({ name, url, id, publisher, ...rest }) {
     name,
     url: absolute('website', 'url', url),
     publisher: typeof publisher === 'string' ? { '@id': publisher } : publisher,
-    ...rest
+    ...rest,
   })
 }
 
@@ -245,6 +246,6 @@ function nonEmpty(list) {
 
 function compact(node) {
   return Object.fromEntries(
-    Object.entries(node).filter(([, value]) => value !== undefined && value !== null && value !== '')
+    Object.entries(node).filter(([, value]) => value !== undefined && value !== null && value !== ''),
   )
 }

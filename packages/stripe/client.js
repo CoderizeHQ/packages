@@ -39,13 +39,13 @@ export function buildStripe(StripeClass, secretKey, options = {}) {
   }
   if (options.apiVersion !== undefined && options.apiVersion !== STRIPE_API_VERSION) {
     throw new TypeError(
-      `createStripe: apiVersion is pinned to ${STRIPE_API_VERSION} by @coderize/stripe and cannot be ` +
-        `overridden (got ${JSON.stringify(options.apiVersion)}). Moving the version is a major release of the package.`
+      `createStripe: apiVersion is pinned to ${STRIPE_API_VERSION} by @coderizehq/stripe and cannot be ` +
+        `overridden (got ${JSON.stringify(options.apiVersion)}). Moving the version is a major release of the package.`,
     )
   }
   return new StripeClass(secretKey, {
     maxNetworkRetries: DEFAULT_MAX_NETWORK_RETRIES,
     ...options,
-    apiVersion: STRIPE_API_VERSION
+    apiVersion: STRIPE_API_VERSION,
   })
 }

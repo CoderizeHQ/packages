@@ -1,20 +1,19 @@
 {
-  "name": "@coderize/astro-kit",
-  "version": "0.2.0",
-  "description": "Shared head, sitemap, robots.txt, structured data and Google Tag Manager behaviour for CoderizeDEV Astro sites, with no styles",
+  "name": "@coderizehq/astro-kit",
+  "version": "0.0.0",
+  "description": "Shared head, sitemap, robots.txt, structured data and Google Tag Manager behaviour for CoderizeHQ Astro sites, with no styles",
   "keywords": [
     "astro",
     "astro-component",
     "seo",
-    "coderize"
+    "coderizehq"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
     "directory": "packages/astro-kit"
   },
-  "license": "UNLICENSED",
-  "author": "Coderize",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.js",
@@ -37,7 +36,8 @@
     "robots.js",
     "schema.js",
     "sitemap.js",
-    "track.js"
+    "track.js",
+    "LICENSE"
   ],
   "scripts": {
     "test": "vitest run"
@@ -50,9 +50,10 @@
     "astro": "^7.0.0"
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

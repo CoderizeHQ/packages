@@ -1,4 +1,6 @@
-# @coderize/stripe
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/stripe` at c60309c) and renamed `@coderizehq/stripe`. The entries from 2.3.1 down are `@coderize/stripe`'s, released from that repo with Changesets; its git history stays there.
 
 ## 2.3.1
 

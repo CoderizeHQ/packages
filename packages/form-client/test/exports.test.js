@@ -8,7 +8,7 @@ const EXPORTS = [
   'RESERVED_FIELDS',
   'createFormGuard',
   'submitForm',
-  'uploadFile'
+  'uploadFile',
 ]
 
 const read = (file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8')
@@ -16,12 +16,12 @@ const declared = (types) => [...types.matchAll(/^export declare (?:const|functio
 
 describe('package exports', () => {
   it('serves the framework-free core from the main entry', async () => {
-    const pkg = await import('@coderize/form-client')
+    const pkg = await import('@coderizehq/form-client')
     expect(Object.keys(pkg).sort()).toEqual(EXPORTS)
   })
 
   it('serves the React hook from its own entry', async () => {
-    const react = await import('@coderize/form-client/react')
+    const react = await import('@coderizehq/form-client/react')
     expect(Object.keys(react)).toEqual(['useFormGuard'])
   })
 

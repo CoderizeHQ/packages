@@ -20,10 +20,10 @@ async function build(options) {
       await webhooks.register(rawJsonBody, options)
       webhooks.post('/stripe', async (request) => ({
         raw: Buffer.isBuffer(request.rawBody) ? request.rawBody.toString('utf8') : null,
-        body: request.body
+        body: request.body,
       }))
     },
-    { prefix: '/webhooks' }
+    { prefix: '/webhooks' },
   )
   app.post('/profile', async (request) => ({ rawBody: request.rawBody ?? null, body: request.body }))
   return app
@@ -81,7 +81,7 @@ describe('rawJsonBody', () => {
       method: 'POST',
       url: '/profile',
       headers: json,
-      payload: '{ "__proto__": { "isAdmin": true } }'
+      payload: '{ "__proto__": { "isAdmin": true } }',
     })
     expect(poisoned.statusCode).toBe(400)
   })
@@ -93,7 +93,7 @@ describe('rawJsonBody', () => {
       method: 'POST',
       url: '/webhooks/stripe',
       headers: { 'content-type': 'text/plain; charset=UTF-8' },
-      payload
+      payload,
     })
 
     expect(response.statusCode).toBe(200)
@@ -103,7 +103,7 @@ describe('rawJsonBody', () => {
       method: 'POST',
       url: '/profile',
       headers: { 'content-type': 'text/plain' },
-      payload: 'hello'
+      payload: 'hello',
     })
     expect(plain.json().body).toBe('hello')
   })
@@ -114,7 +114,7 @@ describe('rawJsonBody', () => {
       method: 'POST',
       url: '/webhooks/stripe',
       headers: json,
-      payload: '{"id":"evt_123456"}'
+      payload: '{"id":"evt_123456"}',
     })
 
     expect(response.statusCode).toBe(413)
@@ -128,7 +128,7 @@ describe('rawJsonBody', () => {
           await scope.register(rawJsonBody)
           scope.post('/', async (request) => ({ raw: request.rawBody.toString('utf8') }))
         },
-        { prefix }
+        { prefix },
       )
     }
 
@@ -143,7 +143,7 @@ describe('rawJsonBody', () => {
     const taken = () =>
       Object.assign(new Error('Unique constraint failed'), {
         name: 'PrismaClientKnownRequestError',
-        code: 'P2002'
+        code: 'P2002',
       })
     app = Fastify()
     app.setErrorHandler(createErrorHandler({ captureException }))
@@ -164,7 +164,7 @@ describe('rawJsonBody', () => {
           throw taken()
         })
       },
-      { prefix: '/webhooks' }
+      { prefix: '/webhooks' },
     )
     app.post('/profile', async () => {
       throw taken()

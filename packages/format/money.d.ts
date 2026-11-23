@@ -3,7 +3,7 @@
 /** Cents for display: `$1,234.56`, `-$12.34`. '' for null or undefined; throws on a non-integer. */
 export declare function formatCents(
   cents: number | null | undefined,
-  options?: { fraction?: 'always' | 'auto' | 'never' }
+  options?: { fraction?: 'always' | 'auto' | 'never' },
 ): string
 
 /** Cents as the text of an amount input: `1234.56`. '' for null or undefined. */

@@ -10,15 +10,15 @@ import {
   phoneHref,
   phoneNeedsFixing,
   phoneStatus,
-  samePhone
-} from '@coderize/format/phone'
+  samePhone,
+} from '@coderizehq/format/phone'
 
 describe('normalizePhone', () => {
   it.each(['8105550100', '(810) 555-0100', '810.555.0100', '+1 810 555 0100', '1-810-555-0100', ' 810 555 0100 '])(
     'reads %j as 8105550100',
     (typed) => {
       expect(normalizePhone(typed)).toEqual({ digits: '8105550100', extension: '', ok: true })
-    }
+    },
   )
 
   it.each([
@@ -28,7 +28,7 @@ describe('normalizePhone', () => {
     ['(810) 555-0100 ext 23', '23'],
     ['810 555 0100 Extension 4567', '4567'],
     ['810-555-0100, #9', '9'],
-    ['8105550100x23', '23']
+    ['8105550100x23', '23'],
   ])('keeps the extension of %j', (typed, extension) => {
     expect(normalizePhone(typed)).toEqual({ digits: '8105550100', extension, ok: true })
   })
@@ -42,7 +42,7 @@ describe('normalizePhone', () => {
     ['810-555-0100 or 810-555-0101', 'two numbers'],
     ['810-555-0100 x', 'an extension marker with no number'],
     ['', 'blank'],
-    [null, 'null']
+    [null, 'null'],
   ])('never guesses at %j (%s)', (typed) => {
     expect(normalizePhone(typed)).toEqual({ digits: '', extension: '', ok: false })
   })
@@ -117,7 +117,7 @@ describe('formatPhoneAsTyped', () => {
     ['8105550100', '(810) 555-0100'],
     ['81055501009', '(810) 555-0100'],
     ['1810555', '(810) 555'],
-    ['+1 (810) 555-0100', '(810) 555-0100']
+    ['+1 (810) 555-0100', '(810) 555-0100'],
   ])('shows %j as %j', (raw, shown) => {
     expect(formatPhoneAsTyped(raw)).toBe(shown)
   })

@@ -4,7 +4,7 @@
 // cents, and 387 of the 500,000 amounts from $0.01 to $5,000.00 showed a fee 1 cent higher than
 // the card was charged.
 //
-// No imports: this file loads in the browser without the Stripe SDK (`@coderize/stripe/fees`).
+// No imports: this file loads in the browser without the Stripe SDK (`@coderizehq/stripe/fees`).
 //
 // The math: Stripe keeps `total * rate + fixed`, so netting `net` needs
 //   total = (net + fixed) / (1 - rate)

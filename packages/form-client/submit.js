@@ -47,7 +47,7 @@ export async function submitForm({ endpoint, client, form, subject, fields, guar
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-      signal
+      signal,
     })
   } catch (err) {
     if (cancelled(signal)) throw err

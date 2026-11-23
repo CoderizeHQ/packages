@@ -32,7 +32,7 @@ function textPart(type, text) {
     `Content-Type: ${type}; charset=UTF-8`,
     'Content-Transfer-Encoding: base64',
     '',
-    base64Lines(Buffer.from(text, 'utf8'))
+    base64Lines(Buffer.from(text, 'utf8')),
   ]
 }
 
@@ -66,7 +66,7 @@ function attachmentPart({ filename, contentType, content }) {
     'Content-Transfer-Encoding: base64',
     disposition.join(''),
     '',
-    base64Lines(content)
+    base64Lines(content),
   ]
 }
 

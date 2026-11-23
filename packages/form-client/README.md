@@ -1,11 +1,15 @@
-# @coderize/form-client
+# @coderizehq/form-client
+
+**It talks to `form-api-ses`, the old fleet's form handler.** CoderizeHQ's own form endpoint (platform
+`aws/live/forms`, `POST /v1/<site>`) takes no `client` key and no uploads, so this package does not work against it
+as it stands.
 
 The browser half of the shared form handler, `form-api-ses`: one call that sends a form, the spam guard it
 expects, the reserved-key filter, and file uploads through presigned S3 posts. The core has no framework, so an
-Astro `<script>` and a React island use the same code; a small React hook lives under `@coderize/form-client/react`.
+Astro `<script>` and a React island use the same code; a small React hook lives under `@coderizehq/form-client/react`.
 
 ```bash
-pnpm add @coderize/form-client
+pnpm add @coderizehq/form-client
 ```
 
 Optional peer dependency: `react` 18 or 19, only for the `/react` entry. Plain JavaScript (ESM) with TypeScript
@@ -43,14 +47,14 @@ of resolving as if the form had gone. Catch it only to show the visitor a fallba
 ## `submitForm`
 
 ```js
-import { createFormGuard, submitForm } from '@coderize/form-client'
+import { createFormGuard, submitForm } from '@coderizehq/form-client'
 
 const result = await submitForm({
   endpoint: import.meta.env.PUBLIC_FORM_API_URL,
   client: 'clientkey', // the site's key in form-api-ses clients.json
   form: 'contact', // optional: picks forms.contact's subject and recipient
   fields: new FormData(formEl), // or a plain object
-  guard // from createFormGuard() or useFormGuard()
+  guard, // from createFormGuard() or useFormGuard()
 })
 ```
 
@@ -109,7 +113,7 @@ when it is shown. With `form`, the honeypot is read from the form's own `website
 ### React: `useFormGuard`
 
 ```jsx
-import { useFormGuard } from '@coderize/form-client/react'
+import { useFormGuard } from '@coderizehq/form-client/react'
 
 const { trapProps, guard } = useFormGuard()
 // <input {...trapProps} />
@@ -151,7 +155,7 @@ An upload the API refuses (415 type, 413 size) stops the submission and resolves
 To upload as soon as a file is picked, with progress, use `uploadFile` and send the key later:
 
 ```js
-import { uploadFile } from '@coderize/form-client'
+import { uploadFile } from '@coderizehq/form-client'
 
 const upload = await uploadFile({ endpoint, client: 'clientkey', file, signal, onProgress: (f) => setProgress(f) })
 if (upload.ok) uploads.push(upload.key)
@@ -198,7 +202,7 @@ After, with the same markup:
 
 ```astro
 <script>
-  import { createFormGuard, submitForm } from '@coderize/form-client'
+  import { createFormGuard, submitForm } from '@coderizehq/form-client'
 
   const form = document.getElementById('quote-form') as HTMLFormElement
   const status = document.getElementById('quote-form-status') as HTMLElement
@@ -215,7 +219,7 @@ After, with the same markup:
         client: 'clientkey',
         form: 'quote',
         fields: new FormData(form),
-        guard
+        guard,
       })
       if (result.ok) {
         form.reset()
@@ -247,7 +251,7 @@ const guard = useFormGuard()
 const res = await fetch(import.meta.env.PUBLIC_FORM_API_URL, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ client: 'clientkey', form: 'contact', ...form, ...guard.guardFields() })
+  body: JSON.stringify({ client: 'clientkey', form: 'contact', ...form, ...guard.guardFields() }),
 })
 if (!res.ok) throw new Error('Failed to submit')
 ```
@@ -255,8 +259,8 @@ if (!res.ok) throw new Error('Failed to submit')
 After:
 
 ```jsx
-import { submitForm } from '@coderize/form-client'
-import { useFormGuard } from '@coderize/form-client/react'
+import { submitForm } from '@coderizehq/form-client'
+import { useFormGuard } from '@coderizehq/form-client/react'
 import { useState } from 'react'
 
 export function ContactForm() {
@@ -272,7 +276,7 @@ export function ContactForm() {
         client: 'clientkey',
         form: 'contact',
         fields: new FormData(event.currentTarget),
-        guard
+        guard,
       })
       setState(result.ok ? { status: 'sent', message: '' } : { status: 'error', message: result.message })
     } catch (err) {

@@ -24,7 +24,7 @@ describe('createStripe', () => {
 
   it('accepts the pin itself as apiVersion, for an app moving over', () => {
     expect(createStripe('sk_test_x', { apiVersion: STRIPE_API_VERSION }).getApiField('version')).toBe(
-      STRIPE_API_VERSION
+      STRIPE_API_VERSION,
     )
   })
 

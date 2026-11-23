@@ -44,7 +44,7 @@ function partsFormatter(timeZone) {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     })
   })
 }
@@ -61,7 +61,7 @@ function toInstant(value) {
   if (typeof value === 'string') {
     if (!INSTANT_RE.test(value)) {
       throw new RangeError(
-        `"${value}" is not an ISO timestamp with an offset. A wall-clock time needs zonedWallTimeToUtc; a calendar day is a YYYY-MM-DD string.`
+        `"${value}" is not an ISO timestamp with an offset. A wall-clock time needs zonedWallTimeToUtc; a calendar day is a YYYY-MM-DD string.`,
       )
     }
     const date = new Date(value)
@@ -233,7 +233,7 @@ export function dayRangeUtc(day, timeZone = DEFAULT_TIME_ZONE) {
   parseDay(day)
   return {
     start: zonedWallTimeToUtc(`${day}T00:00`, timeZone),
-    end: zonedWallTimeToUtc(`${addDays(day, 1)}T00:00`, timeZone)
+    end: zonedWallTimeToUtc(`${addDays(day, 1)}T00:00`, timeZone),
   }
 }
 
@@ -273,7 +273,7 @@ export function formatDate(value, { timeZone = DEFAULT_TIME_ZONE, style = 'mediu
  */
 export function formatDateTime(
   value,
-  { timeZone = DEFAULT_TIME_ZONE, dateStyle = 'medium', timeStyle = 'short', locale = 'en-US' } = {}
+  { timeZone = DEFAULT_TIME_ZONE, dateStyle = 'medium', timeStyle = 'short', locale = 'en-US' } = {},
 ) {
   if (value == null || value === '') return ''
   return format(locale, { dateStyle, timeStyle, timeZone }, toInstant(value))
@@ -297,7 +297,7 @@ const UNITS = [
   ['day', DAY_MS, 7],
   ['week', 7 * DAY_MS, 30 / 7],
   ['month', (365.25 / 12) * DAY_MS, 12],
-  ['year', 365.25 * DAY_MS, Infinity]
+  ['year', 365.25 * DAY_MS, Infinity],
 ]
 
 /**
@@ -310,7 +310,7 @@ const UNITS = [
  */
 export function formatRelative(
   value,
-  { now = new Date(), timeZone = DEFAULT_TIME_ZONE, locale = 'en-US', numeric = 'auto' } = {}
+  { now = new Date(), timeZone = DEFAULT_TIME_ZONE, locale = 'en-US', numeric = 'auto' } = {},
 ) {
   if (value == null || value === '') return ''
   const rtf = cached(`rel|${locale}|${numeric}`, () => new Intl.RelativeTimeFormat(locale, { numeric }))

@@ -36,7 +36,7 @@ describe('verifyWebhook', () => {
     const tampered = payload.replace('in_1', 'in_2')
     expect(refusal(() => verifyWebhook({ stripe, rawBody: tampered, signature, secret: SECRET }))).toMatchObject({
       code: 'INVALID_SIGNATURE',
-      statusCode: 400
+      statusCode: 400,
     })
   })
 
@@ -44,7 +44,7 @@ describe('verifyWebhook', () => {
     const signature = sign()
     const reserialised = JSON.stringify(JSON.parse(payload))
     expect(refusal(() => verifyWebhook({ stripe, rawBody: reserialised, signature, secret: SECRET })).code).toBe(
-      'INVALID_SIGNATURE'
+      'INVALID_SIGNATURE',
     )
   })
 
@@ -58,17 +58,17 @@ describe('verifyWebhook', () => {
     const anHourAgo = Math.floor(Date.now() / 1000) - 3600
     const signature = sign(payload, SECRET, anHourAgo)
     expect(refusal(() => verifyWebhook({ stripe, rawBody: payload, signature, secret: SECRET })).code).toBe(
-      'INVALID_SIGNATURE'
+      'INVALID_SIGNATURE',
     )
     expect(verifyWebhook({ stripe, rawBody: payload, signature, secret: SECRET, tolerance: 7200 }).id).toBe(
-      'evt_test_1'
+      'evt_test_1',
     )
   })
 
   it('accepts either secret while an endpoint is being replaced', () => {
     const secret = [SECRET, OLD_SECRET]
     expect(verifyWebhook({ stripe, rawBody: payload, signature: sign(payload, OLD_SECRET), secret }).id).toBe(
-      'evt_test_1'
+      'evt_test_1',
     )
     expect(verifyWebhook({ stripe, rawBody: payload, signature: sign(payload, SECRET), secret }).id).toBe('evt_test_1')
   })
@@ -77,7 +77,7 @@ describe('verifyWebhook', () => {
     for (const signature of [undefined, null, '', []]) {
       expect(refusal(() => verifyWebhook({ stripe, rawBody: payload, signature, secret: SECRET }))).toMatchObject({
         code: 'MISSING_SIGNATURE',
-        statusCode: 400
+        statusCode: 400,
       })
     }
   })
@@ -86,7 +86,7 @@ describe('verifyWebhook', () => {
     for (const rawBody of [event, undefined, null]) {
       expect(refusal(() => verifyWebhook({ stripe, rawBody, signature: sign(), secret: SECRET }))).toMatchObject({
         code: 'RAW_BODY_REQUIRED',
-        statusCode: 500
+        statusCode: 500,
       })
     }
   })
@@ -96,11 +96,11 @@ describe('verifyWebhook', () => {
       { stripe, secret: undefined },
       { stripe, secret: '' },
       { stripe, secret: [] },
-      { stripe: undefined, secret: SECRET }
+      { stripe: undefined, secret: SECRET },
     ]) {
       expect(refusal(() => verifyWebhook({ ...input, rawBody: payload, signature: sign() }))).toMatchObject({
         code: 'WEBHOOK_NOT_CONFIGURED',
-        statusCode: 500
+        statusCode: 500,
       })
     }
   })
@@ -110,11 +110,11 @@ describe('verifyWebhook', () => {
       webhooks: {
         constructEvent: () => {
           throw new TypeError('crypto unavailable')
-        }
-      }
+        },
+      },
     }
     expect(() => verifyWebhook({ stripe: broken, rawBody: payload, signature: sign(), secret: SECRET })).toThrow(
-      TypeError
+      TypeError,
     )
   })
 })
@@ -140,8 +140,8 @@ describe('routeEvent', () => {
       routeEvent(event, {
         'invoice.paid': async () => {
           throw new Error('db down')
-        }
-      })
+        },
+      }),
     ).rejects.toThrow('db down')
   })
 })

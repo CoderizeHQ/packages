@@ -1,4 +1,6 @@
-# @coderize/astro-kit
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/astro-kit` at c60309c) and renamed `@coderizehq/astro-kit`. The entries from 0.2.0 down are `@coderize/astro-kit`'s, released from that repo with Changesets; its git history stays there.
 
 ## 0.2.0
 

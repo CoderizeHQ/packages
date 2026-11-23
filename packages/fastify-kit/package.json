@@ -1,18 +1,17 @@
 {
-  "name": "@coderize/fastify-kit",
-  "version": "0.4.0",
-  "description": "Shared Fastify building blocks for CoderizeDEV APIs: health checks, error handler, trust proxy, request ids, logger, Sentry, security preset, raw webhook bodies, server start and shutdown, env checks and Turnstile",
+  "name": "@coderizehq/fastify-kit",
+  "version": "0.0.0",
+  "description": "Shared Fastify building blocks for CoderizeHQ APIs: health checks, error handler, trust proxy, request ids, logger, Sentry, security preset, raw webhook bodies, server start and shutdown, env checks and Turnstile",
   "keywords": [
     "fastify",
-    "coderize"
+    "coderizehq"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
     "directory": "packages/fastify-kit"
   },
-  "license": "UNLICENSED",
-  "author": "Coderize",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.js",
@@ -33,7 +32,8 @@
     "sentry.js",
     "server.js",
     "trustProxy.js",
-    "turnstile.js"
+    "turnstile.js",
+    "LICENSE"
   ],
   "scripts": {
     "test": "vitest run"
@@ -77,9 +77,10 @@
     }
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

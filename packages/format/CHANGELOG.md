@@ -1,4 +1,6 @@
-# @coderize/format
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/format` at c60309c) and renamed `@coderizehq/format`. The entries from 0.1.1 down are `@coderize/format`'s, released from that repo with Changesets; its git history stays there.
 
 ## 0.1.1
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { slugify } from '@coderize/format/slug'
+import { slugify } from '@coderizehq/format/slug'
 
 describe('slugify', () => {
   it.each([
@@ -16,7 +16,7 @@ describe('slugify', () => {
     ['UPPER lower', 'upper-lower'],
     ['!!!', ''],
     ['', ''],
-    [null, '']
+    [null, ''],
   ])('slugs %j as %j', (text, slug) => {
     expect(slugify(text)).toBe(slug)
   })

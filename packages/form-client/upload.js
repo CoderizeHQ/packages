@@ -50,7 +50,7 @@ export async function uploadFile({ endpoint, client, file, signal, onProgress })
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ client: clientKey, filename: file?.name ?? '', size: file?.size ?? 0 }),
-      signal
+      signal,
     })
     target = await readJson(res)
     if (!res.ok) return failure(res.status, target)

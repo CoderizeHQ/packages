@@ -1,4 +1,6 @@
-# @coderize/form-client
+# Changelog
+
+Moved here from CoderizeDEV/coderize-platform (`packages/form-client` at c60309c) and renamed `@coderizehq/form-client`. The entries from 0.1.1 down are `@coderize/form-client`'s, released from that repo with Changesets; its git history stays there.
 
 ## 0.1.1
 

@@ -1,20 +1,19 @@
 {
-  "name": "@coderize/game-kit",
-  "version": "0.1.2",
+  "name": "@coderizehq/game-kit",
+  "version": "0.0.0",
   "description": "Shared pieces of Coderize's Capacitor games: Play Games cloud save (with its Android plugin) and haptics",
   "keywords": [
     "capacitor",
     "capacitor-plugin",
     "games",
-    "coderize"
+    "coderizehq"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CoderizeDEV/coderize-platform.git",
+    "url": "git+https://github.com/CoderizeHQ/packages.git",
     "directory": "packages/game-kit"
   },
-  "license": "UNLICENSED",
-  "author": "Coderize",
+  "license": "MIT",
   "type": "module",
   "exports": {
     "./cloud-save": {
@@ -34,7 +33,8 @@
     "cloudSave.d.ts",
     "cloudSave.js",
     "haptics.d.ts",
-    "haptics.js"
+    "haptics.js",
+    "LICENSE"
   ],
   "scripts": {
     "test": "vitest run && tsc -p test/types"
@@ -55,10 +55,11 @@
     }
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "capacitor": {
     "android": {

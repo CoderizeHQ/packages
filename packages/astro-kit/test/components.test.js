@@ -46,7 +46,7 @@ describe('SeoHead', () => {
     expect(canonicals(fromPath)).toEqual(['https://example.com/blog'])
     const fromUrl = await render(SeoHead, {
       path: '/copy/',
-      props: { title: 'Copy', canonical: 'https://other.example/original/?utm_source=x' }
+      props: { title: 'Copy', canonical: 'https://other.example/original/?utm_source=x' },
     })
     expect(canonicals(fromUrl)).toEqual(['https://other.example/original'])
   })
@@ -63,8 +63,8 @@ describe('SeoHead', () => {
         imageHeight: 630,
         siteName: 'Acme',
         locale: 'en_US',
-        twitterSite: '@acme'
-      }
+        twitterSite: '@acme',
+      },
     })
     expect(html).toContain('<title>About · Acme</title>')
     expect(meta(html, 'description')).toEqual(['Who we are &amp; what we do'])
@@ -111,7 +111,7 @@ describe('SeoHead', () => {
   it('keeps an explicit canonical on a noindex page, and adds nofollow when asked', async () => {
     const html = await render(SeoHead, {
       path: '/thanks/',
-      props: { title: 'Thanks', noindex: true, nofollow: true, canonical: '/contact' }
+      props: { title: 'Thanks', noindex: true, nofollow: true, canonical: '/contact' },
     })
     expect(meta(html, 'robots')).toEqual(['noindex, nofollow'])
     expect(canonicals(html)).toEqual(['https://example.com/contact'])
@@ -127,7 +127,7 @@ describe('JsonLd', () => {
 
   it('writes one script per call, with @context, escaping < so nothing can close the tag', async () => {
     const html = await render(JsonLd, {
-      props: { data: { '@type': 'Event', name: 'Bad </script><script>alert(1)</script>' } }
+      props: { data: { '@type': 'Event', name: 'Bad </script><script>alert(1)</script>' } },
     })
     const [json, ...rest] = scripts(html)
     expect(rest).toEqual([])
@@ -135,7 +135,7 @@ describe('JsonLd', () => {
     expect(JSON.parse(json)).toEqual({
       '@context': 'https://schema.org',
       '@type': 'Event',
-      name: 'Bad </script><script>alert(1)</script>'
+      name: 'Bad </script><script>alert(1)</script>',
     })
   })
 
@@ -143,7 +143,7 @@ describe('JsonLd', () => {
     const html = await render(JsonLd, { props: { data: [{ '@type': 'Organization' }, { '@type': 'WebSite' }] } })
     const parsed = scripts(html).map((json) => JSON.parse(json))
     expect(parsed).toEqual([
-      { '@context': 'https://schema.org', '@graph': [{ '@type': 'Organization' }, { '@type': 'WebSite' }] }
+      { '@context': 'https://schema.org', '@graph': [{ '@type': 'Organization' }, { '@type': 'WebSite' }] },
     ])
   })
 
@@ -152,9 +152,9 @@ describe('JsonLd', () => {
       props: {
         data: [
           { '@context': 'https://schema.org', '@type': 'Organization', name: 'A </script><script>alert(1)</script>' },
-          { '@type': 'WebSite', description: '<!-- not a comment -->' }
-        ]
-      }
+          { '@type': 'WebSite', description: '<!-- not a comment -->' },
+        ],
+      },
     })
     const [json, ...rest] = scripts(html)
     expect(rest).toEqual([])
@@ -163,8 +163,8 @@ describe('JsonLd', () => {
       '@context': 'https://schema.org',
       '@graph': [
         { '@type': 'Organization', name: 'A </script><script>alert(1)</script>' },
-        { '@type': 'WebSite', description: '<!-- not a comment -->' }
-      ]
+        { '@type': 'WebSite', description: '<!-- not a comment -->' },
+      ],
     })
   })
 

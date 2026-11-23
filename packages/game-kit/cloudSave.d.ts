@@ -31,5 +31,5 @@ export interface CloudSave<Save> {
 
 /** Play Games saved-game sync for one game. Make one per run, at module level. */
 export declare function createCloudSave<Save = Record<string, unknown>>(
-  options: CloudSaveOptions<Save>
+  options: CloudSaveOptions<Save>,
 ): CloudSave<Save>

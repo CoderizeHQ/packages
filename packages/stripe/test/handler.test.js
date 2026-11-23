@@ -26,7 +26,7 @@ function fakePrisma() {
     claimed,
     stripeEvent: {
       findUnique: vi.fn(async () => null), // as if both copies checked before either committed
-      create: vi.fn()
+      create: vi.fn(),
     },
     $transaction: vi.fn(async (work) => {
       const tx = { mine: [], rows: [] }
@@ -37,7 +37,7 @@ function fakePrisma() {
           claimed.add(data.id)
           tx.mine.push(data.id)
           return data
-        }
+        },
       }
       try {
         const result = await work(tx)
@@ -47,7 +47,7 @@ function fakePrisma() {
         tx.mine.forEach((id) => claimed.delete(id))
         throw err
       }
-    })
+    }),
   }
   return prisma
 }
@@ -64,7 +64,7 @@ describe('handleStripeWebhook', () => {
         tx.rows.push(e.data.object.id)
         after(() => order.push('email'))
         order.push('write')
-      }
+      },
     }
     await expect(handle({ prisma, handlers })).resolves.toEqual({ status: 200, body: { received: true } })
     expect(prisma.rows).toEqual(['in_1'])
@@ -76,7 +76,7 @@ describe('handleStripeWebhook', () => {
     const handlers = { 'invoice.paid': async (e, { tx }) => tx.rows.push(e.data.object.id) }
     const results = await Promise.all([
       handle({ prisma, handlers }),
-      handle({ prisma, handlers, signature: sign(payload, OLD_SECRET), secret: [OLD_SECRET, SECRET] })
+      handle({ prisma, handlers, signature: sign(payload, OLD_SECRET), secret: [OLD_SECRET, SECRET] }),
     ])
     expect(prisma.rows).toEqual(['in_1'])
     expect(results.map((r) => r.status)).toEqual([200, 200])
@@ -93,7 +93,7 @@ describe('handleStripeWebhook', () => {
       statusCode: 500,
       eventId: 'evt_test_1',
       eventType: 'invoice.paid',
-      cause: down
+      cause: down,
     })
     expect(prisma.claimed.size).toBe(0)
 
@@ -108,7 +108,7 @@ describe('handleStripeWebhook', () => {
     const failures = [
       Object.assign(new Error('Record to update not found'), { name: 'PrismaClientKnownRequestError', code: 'P2025' }),
       Object.assign(new Error('Unique constraint failed'), { name: 'PrismaClientKnownRequestError', code: 'P2002' }),
-      Object.assign(new Error('Booking not found'), { name: 'AppError', statusCode: 404, code: 'NOT_FOUND' })
+      Object.assign(new Error('Booking not found'), { name: 'AppError', statusCode: 404, code: 'NOT_FOUND' }),
     ]
     for (const failure of failures) {
       const prisma = fakePrisma()
@@ -129,7 +129,7 @@ describe('handleStripeWebhook', () => {
       'invoice.paid': async (e, { tx, after }) => {
         tx.rows.push(e.data.object.id)
         after(() => Promise.reject(new Error('SES down')))
-      }
+      },
     }
     await expect(handle({ prisma, handlers, log })).resolves.toMatchObject({ status: 200 })
     expect(prisma.rows).toEqual(['in_1'])
@@ -140,7 +140,7 @@ describe('handleStripeWebhook', () => {
     const prisma = fakePrisma()
     await expect(handle({ prisma, handlers: {} })).resolves.toEqual({
       status: 200,
-      body: { received: true, handled: false }
+      body: { received: true, handled: false },
     })
     expect(prisma.$transaction).not.toHaveBeenCalled()
   })
@@ -150,11 +150,11 @@ describe('handleStripeWebhook', () => {
     const handlers = { 'invoice.paid': vi.fn() }
     await expect(handle({ prisma, handlers, signature: sign(payload, 'whsec_wrong') })).resolves.toMatchObject({
       status: 400,
-      body: { code: 'INVALID_SIGNATURE' }
+      body: { code: 'INVALID_SIGNATURE' },
     })
     await expect(handle({ prisma, handlers, secret: undefined })).resolves.toMatchObject({
       status: 500,
-      body: { code: 'WEBHOOK_NOT_CONFIGURED' }
+      body: { code: 'WEBHOOK_NOT_CONFIGURED' },
     })
     expect(handlers['invoice.paid']).not.toHaveBeenCalled()
   })
