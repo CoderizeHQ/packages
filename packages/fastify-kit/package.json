@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/fastify-kit",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Shared Fastify building blocks for CoderizeHQ APIs: health checks, error handler, trust proxy, request ids, logger, Sentry, security preset, raw webhook bodies, server start and shutdown, env checks and Turnstile",
   "keywords": [
     "fastify",
