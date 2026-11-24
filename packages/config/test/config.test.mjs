@@ -111,7 +111,11 @@ test('react: src/ is browser code; config files and tests get Node globals', asy
 test('react: scripts in public/ get browser globals, not Node ones', async () => {
   const browserScript =
     "window.dataLayer = []\ndocument.documentElement.dataset.theme = localStorage.getItem('theme')\n"
-  for (const filePath of ['public/consent-defaults.js', 'public/js/a11y-prefs.mjs']) {
+  for (const filePath of [
+    'public/consent-defaults.js',
+    'public/js/a11y-prefs.mjs',
+    'apps/admin/public/a11y-prefs.js',
+  ]) {
     assert.deepEqual(await lint(react, browserScript, filePath), [])
     assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', filePath), ['no-undef'])
   }

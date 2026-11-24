@@ -63,7 +63,8 @@ export const react = [
   js.configs.recommended,
   { languageOptions: { ecmaVersion: 'latest', sourceType: 'module' } },
   {
-    files: ['src/**/*.{js,jsx,mjs}', 'public/**/*.{js,mjs}', ...testSetupFiles],
+    // public/ at any depth: browser globals are all it adds, so matching a nested one does no harm.
+    files: ['src/**/*.{js,jsx,mjs}', '**/public/**/*.{js,mjs}', ...testSetupFiles],
     languageOptions: { globals: { ...globals.browser } },
   },
   { ...nodeFiles, files: [...nodeFiles.files, '**/*.test.jsx', ...testSetupFiles] },

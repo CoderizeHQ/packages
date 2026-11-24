@@ -40,7 +40,7 @@ Prettier formats, ESLint finds mistakes and never formats.
 - `react`: ESLint's recommended rules plus eslint-plugin-react's (recommended and JSX runtime), eslint-plugin-react-hooks'
   and eslint-plugin-react-refresh's `only-export-components`, which come with this package. Browser globals under
   `src/` and in `public/` scripts, Node globals in config files, `scripts/` and tests (`.test.jsx` too), and both in
-  test setup files (`tests/setup.js`, `test/setup.js`, `vitest.setup.js`). `src/` code never gets Node globals: Vite
+  test setup files (`tests/setup.js`, `test/setup.js`, `vitest.setup.js`). Other `src/` code never gets Node globals: Vite
   code reads `import.meta.env`. `settings.react.version` is pinned
   to 19.2: on ESLint 10, eslint-plugin-react's version detection crashes. Version-sensitive rules therefore assume
   React 19, even in an app still on 18. Off, as in `@coderize/config`: `prop-types` and `no-unescaped-entities`.
