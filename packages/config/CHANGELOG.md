@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/CoderizeHQ/packages/compare/config-v0.2.0...config-v0.3.0) (2026-11-24)
+
+
+### Features
+
+* **config:** add a react preset ([92f63c7](https://github.com/CoderizeHQ/packages/commit/92f63c7c1c73ad2c3473ec04c03cd24424ba9a60))
+
+
+### Bug Fixes
+
+* **config:** ignore _-prefixed variables and rest siblings in no-unused-vars ([92f63c7](https://github.com/CoderizeHQ/packages/commit/92f63c7c1c73ad2c3473ec04c03cd24424ba9a60))
+
 ## [0.2.0](https://github.com/CoderizeHQ/packages/compare/config-v0.1.1...config-v0.2.0) (2026-11-16)
 
 
