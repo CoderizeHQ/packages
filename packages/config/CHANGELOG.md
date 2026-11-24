@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/CoderizeHQ/packages/compare/config-v0.3.0...config-v0.3.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* **config:** give browser globals to public scripts and test setup files ([#49](https://github.com/CoderizeHQ/packages/issues/49)) ([ab47e0d](https://github.com/CoderizeHQ/packages/commit/ab47e0dab1e32ae109ab6a1048ec3e8e63642af6))
+
 ## [0.3.0](https://github.com/CoderizeHQ/packages/compare/config-v0.2.0...config-v0.3.0) (2026-11-24)
 
 
