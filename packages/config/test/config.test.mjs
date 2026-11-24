@@ -108,6 +108,32 @@ test('react: src/ is browser code; config files and tests get Node globals', asy
   assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', 'src/lib/api.js'), ['no-undef'])
 })
 
+test('react: scripts in public/ get browser globals, not Node ones', async () => {
+  const browserScript =
+    "window.dataLayer = []\ndocument.documentElement.dataset.theme = localStorage.getItem('theme')\n"
+  for (const filePath of [
+    'public/consent-defaults.js',
+    'public/js/a11y-prefs.mjs',
+    'apps/admin/public/a11y-prefs.js',
+  ]) {
+    assert.deepEqual(await lint(react, browserScript, filePath), [])
+    assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', filePath), ['no-undef'])
+  }
+})
+
+test('react: test setup files get browser and Node globals', async () => {
+  const setup = "localStorage.clear()\nsessionStorage.clear()\nwindow.scrollTo = () => {}\nprocess.env.TZ = 'UTC'\n"
+  for (const filePath of ['tests/setup.js', 'test/setup.jsx', 'vitest.setup.js', 'apps/app/tests/setup.js']) {
+    assert.deepEqual(await lint(react, setup, filePath), [])
+  }
+})
+
+test('react: src/ app code still has no Node globals, whatever folder it sits in', async () => {
+  for (const filePath of ['src/main.jsx', 'src/tests/helper.js', 'src/public/banner.js']) {
+    assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', filePath), ['no-undef'])
+  }
+})
+
 test('react: target="_blank" needs rel="noopener", and noopener alone (keeping the referrer) is enough', async () => {
   const link = (rel) => `export const L = () => <a href="https://example.com" target="_blank"${rel}>x</a>\n`
   assert.deepEqual(await lint(react, link(''), 'src/component/L.jsx'), ['react/jsx-no-target-blank'])
