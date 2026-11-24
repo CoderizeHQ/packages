@@ -2,6 +2,13 @@
 
 Moved here from CoderizeDEV/coderize-platform (`packages/stripe` at c60309c) and renamed `@coderizehq/stripe`. The entries from 2.3.1 down are `@coderize/stripe`'s, released from that repo with Changesets; its git history stays there.
 
+## 3.0.0 (2026-11-24)
+
+
+### Features
+
+* move the [@coderize](https://github.com/coderize) packages here as @coderizehq/* ([#16](https://github.com/CoderizeHQ/packages/issues/16)) ([a4011d4](https://github.com/CoderizeHQ/packages/commit/a4011d4cf268b0262aa9c3b23c93503290b0c088))
+
 ## 2.3.1
 
 ### Patch Changes
