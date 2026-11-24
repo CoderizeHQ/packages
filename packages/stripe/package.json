@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/stripe",
-  "version": "0.0.0",
+  "version": "3.0.0",
   "description": "Shared Stripe building blocks for CoderizeHQ apps: the pinned API version, the client, a version guard for CI, webhook basics, readers for moved fields and a browser-safe card-fee gross-up",
   "keywords": [
     "stripe",
