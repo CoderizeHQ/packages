@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/format",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Shared formatting rules for CoderizeHQ apps: Michigan-time dates, integer-cents money, CSV, US phone numbers and slugs, with no dependencies",
   "keywords": [
     "format",
