@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { ESLint } from 'eslint'
 import * as prettier from 'prettier'
-import { astro, node } from '../eslint.js'
+import { astro, node, react } from '../eslint.js'
 import prettierConfig from '../prettier.js'
 
 const lint = async (config, text, filePath) => {
@@ -33,6 +33,64 @@ test('astro: lints .astro frontmatter and knows browser globals in pages', async
 test('astro: config files and scripts get Node globals', async () => {
   assert.deepEqual(await lint(astro, 'console.log(process.env.SITE_URL)\n', 'astro.config.mjs'), [])
   assert.deepEqual(await lint(astro, 'console.log(process.env.SITE_URL)\n', 'src/lib/site.js'), ['no-undef'])
+})
+
+const component = [
+  "import { useState } from 'react'",
+  "import { Card } from './Card.jsx'",
+  '',
+  'export function Counter() {',
+  '  const [count, setCount] = useState(0)',
+  '  return (',
+  '    <Card>',
+  "      <button onClick={() => setCount(count + 1)}>Don't stop: {count}</button>",
+  '    </Card>',
+  '  )',
+  '}',
+  '',
+  "document.title = 'x'",
+  '',
+].join('\n')
+
+test('react: a component lints clean, with JSX-used imports counted as used and browser globals in src/', async () => {
+  assert.deepEqual(await lint(react, component, 'src/component/Counter.jsx'), [])
+})
+
+test('react: catches hooks violations and unused variables', async () => {
+  const conditional = [
+    "import { useState } from 'react'",
+    '',
+    'export function Field({ show }) {',
+    '  const unused = 1',
+    '  if (show) {',
+    '    const [value] = useState(0)',
+    '    return <p>{value}</p>',
+    '  }',
+    '  return null',
+    '}',
+    '',
+  ].join('\n')
+  assert.deepEqual(await lint(react, conditional, 'src/component/Field.jsx'), [
+    'no-unused-vars',
+    'react-hooks/rules-of-hooks',
+  ])
+})
+
+test('react: src/ is browser code; config files and tests get Node globals', async () => {
+  assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', 'vite.config.js'), [])
+  assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', 'src/component/App.test.jsx'), [])
+  assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', 'src/lib/api.js'), ['no-undef'])
+})
+
+test('react: the React version is pinned, never detected', () => {
+  const versions = react.map((config) => config.settings?.react?.version).filter(Boolean)
+  assert.deepEqual(versions, ['19.2'])
+})
+
+test('astro + react: React islands lint inside an Astro site', async () => {
+  assert.deepEqual(await lint([...astro, ...react], component, 'src/component/Counter.jsx'), [])
+  const page = '---\nconst title = "Home"\n---\n<h1>{title}</h1>\n'
+  assert.deepEqual(await lint([...astro, ...react], page, 'src/pages/index.astro'), [])
 })
 
 test('prettier: single quotes, no semicolons, width 120, LF', async () => {

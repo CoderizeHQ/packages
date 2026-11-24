@@ -7,13 +7,15 @@ CoderizeHQ's shared ESLint presets and Prettier config. Every CoderizeHQ repo us
 pnpm add -D @coderizehq/config eslint prettier
 ```
 
-`eslint.config.js`, for an Astro site (`node` for everything else):
+`eslint.config.js`, for an Astro site (`react` for a Vite + React app, `node` for everything else):
 
 ```js
 import { astro } from '@coderizehq/config/eslint'
 
 export default astro
 ```
+
+An Astro site with React islands spreads both: `export default [...astro, ...react]`.
 
 `.prettierrc.json`:
 
@@ -29,12 +31,18 @@ Prettier formats, ESLint finds mistakes and never formats.
 - `astro`: ESLint's recommended rules plus eslint-plugin-astro's, browser globals in pages, Node globals in config
   files, `scripts/` and tests.
 - `node`: ESLint's recommended rules with Node globals.
-- Both: unused variables are errors, except arguments starting with `_`.
+- `react`: ESLint's recommended rules plus eslint-plugin-react's (recommended and JSX runtime), eslint-plugin-react-hooks'
+  and eslint-plugin-react-refresh's `only-export-components`, which come with this package. Browser globals under
+  `src/`, Node globals in config files, `scripts/` and tests (`.test.jsx` too). `settings.react.version` is pinned
+  to 19.2: on ESLint 10, eslint-plugin-react's version detection crashes. Off, as in `@coderize/config`: `prop-types`,
+  `jsx-no-target-blank` and `no-unescaped-entities`. The React Compiler checks that flag working code
+  (`set-state-in-effect`, `purity`, `globals`) warn rather than fail.
+- All three: unused variables are errors, except arguments starting with `_`.
 - Prettier: 120 columns, 2 spaces, single quotes, no semicolons, trailing commas, LF; `.astro` files through
   prettier-plugin-astro, which comes with this package.
 
 A new error-level rule, or a warning raised to an error, is a breaking change and a major version. Import rules, when
-they're added, come from eslint-plugin-import-x; a React preset, when a site needs one, pins `settings.react.version`.
+they're added, come from eslint-plugin-import-x.
 
 ## Where versions come from
 
