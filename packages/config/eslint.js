@@ -50,16 +50,23 @@ export const astro = [
   rules,
 ]
 
+// Test setup files (Vitest's setupFiles) prepare a jsdom window for the tests, so they get browser and Node globals.
+const testSetupFiles = ['**/tests/setup.{js,jsx}', '**/test/setup.{js,jsx}', '**/vitest.setup.{js,jsx}']
+
 /**
- * React: a Vite + React app, or the React islands in an Astro site (`[...astro, ...react]`). Code under src/ runs in the
- * browser; config files, scripts and tests (`.test.jsx` too) in Node.
+ * React: a Vite + React app, or the React islands in an Astro site (`[...astro, ...react]`). Code under src/ and the
+ * scripts in public/ run in the browser; config files, scripts and tests (`.test.jsx` too) in Node; test setup files
+ * in both.
  */
 export const react = [
   ignores,
   js.configs.recommended,
   { languageOptions: { ecmaVersion: 'latest', sourceType: 'module' } },
-  { files: ['src/**/*.{js,jsx,mjs}'], languageOptions: { globals: { ...globals.browser } } },
-  { ...nodeFiles, files: [...nodeFiles.files, '**/*.test.jsx'] },
+  {
+    files: ['src/**/*.{js,jsx,mjs}', 'public/**/*.{js,mjs}', ...testSetupFiles],
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  { ...nodeFiles, files: [...nodeFiles.files, '**/*.test.jsx', ...testSetupFiles] },
   {
     files: ['**/*.{js,jsx,mjs}'],
     languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
