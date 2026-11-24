@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/form-client",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Browser client for the form-api-ses form handler: submit, spam guard, reserved-key filter and file uploads",
   "keywords": [
     "forms",
