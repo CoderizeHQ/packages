@@ -66,9 +66,9 @@ export const react = [
       ...reactPlugin.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/prop-types': 'off',
-      // Browsers have applied noopener to target="_blank" since 2021; what's left is withholding the referrer, which
-      // client sites usually want sent.
-      'react/jsx-no-target-blank': 'off',
+      // target="_blank" needs rel="noopener" (or "noreferrer"): browsers imply noopener now, but older ones and
+      // embedded webviews don't. noopener alone is enough, so the referrer, which client sites usually want sent, stays.
+      'react/jsx-no-target-blank': ['error', { allowReferrer: true }],
       // Apostrophes in JSX text are ordinary copy ("don't"), not bugs.
       'react/no-unescaped-entities': 'off',
       // React Compiler heuristics that flag common, working patterns. We don't run the compiler, so they warn rather

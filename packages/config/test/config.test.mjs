@@ -82,6 +82,12 @@ test('react: src/ is browser code; config files and tests get Node globals', asy
   assert.deepEqual(await lint(react, 'console.log(process.env.PORT)\n', 'src/lib/api.js'), ['no-undef'])
 })
 
+test('react: target="_blank" needs rel="noopener", and noopener alone (keeping the referrer) is enough', async () => {
+  const link = (rel) => `export const L = () => <a href="https://example.com" target="_blank"${rel}>x</a>\n`
+  assert.deepEqual(await lint(react, link(''), 'src/component/L.jsx'), ['react/jsx-no-target-blank'])
+  assert.deepEqual(await lint(react, link(' rel="noopener"'), 'src/component/L.jsx'), [])
+})
+
 test('react: the React version is pinned, never detected', () => {
   const versions = react.map((config) => config.settings?.react?.version).filter(Boolean)
   assert.deepEqual(versions, ['19.2'])

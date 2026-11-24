@@ -15,7 +15,13 @@ import { astro } from '@coderizehq/config/eslint'
 export default astro
 ```
 
-An Astro site with React islands spreads both: `export default [...astro, ...react]`.
+An Astro site with React islands spreads both:
+
+```js
+import { astro, react } from '@coderizehq/config/eslint'
+
+export default [...astro, ...react]
+```
 
 `.prettierrc.json`:
 
@@ -34,9 +40,12 @@ Prettier formats, ESLint finds mistakes and never formats.
 - `react`: ESLint's recommended rules plus eslint-plugin-react's (recommended and JSX runtime), eslint-plugin-react-hooks'
   and eslint-plugin-react-refresh's `only-export-components`, which come with this package. Browser globals under
   `src/`, Node globals in config files, `scripts/` and tests (`.test.jsx` too). `settings.react.version` is pinned
-  to 19.2: on ESLint 10, eslint-plugin-react's version detection crashes. Off, as in `@coderize/config`: `prop-types`,
-  `jsx-no-target-blank` and `no-unescaped-entities`. The React Compiler checks that flag working code
-  (`set-state-in-effect`, `purity`, `globals`) warn rather than fail.
+  to 19.2: on ESLint 10, eslint-plugin-react's version detection crashes. Version-sensitive rules therefore assume
+  React 19, even in an app still on 18. Off, as in `@coderize/config`: `prop-types` and `no-unescaped-entities`.
+  `jsx-no-target-blank` stays on, but `rel="noopener"` satisfies it, so the referrer is still sent. The React Compiler
+  checks that flag working code (`set-state-in-effect`, `purity`, `globals`) warn rather than fail.
+  eslint-plugin-react 7.37 declares ESLint only up to 9.7, so pnpm reports an unmet peer. The rules this preset turns
+  on are tested on ESLint 10; any other `react/*` rule may not be.
 - All three: unused variables are errors, except arguments starting with `_`.
 - Prettier: 120 columns, 2 spaces, single quotes, no semicolons, trailing commas, LF; `.astro` files through
   prettier-plugin-astro, which comes with this package.
