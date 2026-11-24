@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/email",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Shared SES email sending for CoderizeHQ apps: one send switch, Simple or raw MIME with attachments, classified errors, an HTML escaper and an SNS signature verifier",
   "keywords": [
     "ses",
