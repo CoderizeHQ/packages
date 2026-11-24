@@ -7,12 +7,20 @@ CoderizeHQ's shared ESLint presets and Prettier config. Every CoderizeHQ repo us
 pnpm add -D @coderizehq/config eslint prettier
 ```
 
-`eslint.config.js`, for an Astro site (`node` for everything else):
+`eslint.config.js`, for an Astro site (`react` for a Vite + React app, `node` for everything else):
 
 ```js
 import { astro } from '@coderizehq/config/eslint'
 
 export default astro
+```
+
+An Astro site with React islands spreads both:
+
+```js
+import { astro, react } from '@coderizehq/config/eslint'
+
+export default [...astro, ...react]
 ```
 
 `.prettierrc.json`:
@@ -29,12 +37,22 @@ Prettier formats, ESLint finds mistakes and never formats.
 - `astro`: ESLint's recommended rules plus eslint-plugin-astro's, browser globals in pages, Node globals in config
   files, `scripts/` and tests.
 - `node`: ESLint's recommended rules with Node globals.
-- Both: unused variables are errors, except arguments starting with `_`.
+- `react`: ESLint's recommended rules plus eslint-plugin-react's (recommended and JSX runtime), eslint-plugin-react-hooks'
+  and eslint-plugin-react-refresh's `only-export-components`, which come with this package. Browser globals under
+  `src/`, Node globals in config files, `scripts/` and tests (`.test.jsx` too). `settings.react.version` is pinned
+  to 19.2: on ESLint 10, eslint-plugin-react's version detection crashes. Version-sensitive rules therefore assume
+  React 19, even in an app still on 18. Off, as in `@coderize/config`: `prop-types` and `no-unescaped-entities`.
+  `jsx-no-target-blank` stays on, but `rel="noopener"` satisfies it, so the referrer is still sent. The React Compiler
+  checks that flag working code (`set-state-in-effect`, `purity`, `globals`) warn rather than fail.
+  eslint-plugin-react 7.37 declares ESLint only up to 9.7, so pnpm reports an unmet peer. The rules this preset turns
+  on are tested on ESLint 10; any other `react/*` rule may not be.
+- All three: unused variables are errors, except variables and arguments starting with `_`, the rest siblings of a
+  destructure (`const { hash, ...rest } = user`) and caught errors.
 - Prettier: 120 columns, 2 spaces, single quotes, no semicolons, trailing commas, LF; `.astro` files through
   prettier-plugin-astro, which comes with this package.
 
 A new error-level rule, or a warning raised to an error, is a breaking change and a major version. Import rules, when
-they're added, come from eslint-plugin-import-x; a React preset, when a site needs one, pins `settings.react.version`.
+they're added, come from eslint-plugin-import-x.
 
 ## Where versions come from
 
