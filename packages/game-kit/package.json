@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/game-kit",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Shared pieces of Coderize's Capacitor games: Play Games cloud save (with its Android plugin) and haptics",
   "keywords": [
     "capacitor",
