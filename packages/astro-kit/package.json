@@ -1,6 +1,6 @@
 {
   "name": "@coderizehq/astro-kit",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Shared head, sitemap, robots.txt, structured data and Google Tag Manager behaviour for CoderizeHQ Astro sites, with no styles",
   "keywords": [
     "astro",
