@@ -14,9 +14,15 @@ import globals from 'globals'
 
 const ignores = { ignores: ['dist/', '.astro/', 'coverage/', 'node_modules/'] }
 
+// A leading _ marks a variable or argument as deliberately unused, and a rest sibling (`const { hash, ...rest } = user`)
+// is how an object drops a key: neither is a mistake. Unused caught errors aren't reported at all, which never fails
+// code that passed under @coderize/config (it reported them unless they started with _).
 const rules = {
   rules: {
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrors: 'none' }],
+    'no-unused-vars': [
+      'error',
+      { varsIgnorePattern: '^_', argsIgnorePattern: '^_', caughtErrors: 'none', ignoreRestSiblings: true },
+    ],
   },
 }
 

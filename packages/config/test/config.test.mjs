@@ -20,6 +20,32 @@ test('node: unused arguments starting with _ are allowed', async () => {
   assert.deepEqual(await lint(node, 'export const f = (_req, res) => res\n', 'x.mjs'), [])
 })
 
+test('every preset: _ variables, rest-sibling omits and caught errors are allowed; other unused names are not', async () => {
+  const code = [
+    'export const publicUser = (user) => {',
+    '  const { passwordHash, ...rest } = user',
+    '  const _debug = rest.id',
+    '  try {',
+    '    return JSON.parse(rest.profile)',
+    '  } catch (err) {',
+    '    return rest',
+    '  }',
+    '}',
+    '',
+  ].join('\n')
+  for (const [preset, filePath] of [
+    [node, 'x.mjs'],
+    [astro, 'src/lib/user.js'],
+    [react, 'src/lib/user.js'],
+  ]) {
+    assert.deepEqual(await lint(preset, code, filePath), [])
+    assert.deepEqual(await lint(preset, 'const debug = 1\nconst { a } = {}\n', filePath), [
+      'no-unused-vars',
+      'no-unused-vars',
+    ])
+  }
+})
+
 test('node: no formatting rules (mixed quotes and semicolons are Prettier’s business)', async () => {
   assert.deepEqual(await lint(node, 'export const a = \'x\'; export const b = "y"\n', 'x.mjs'), [])
 })

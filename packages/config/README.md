@@ -46,7 +46,8 @@ Prettier formats, ESLint finds mistakes and never formats.
   checks that flag working code (`set-state-in-effect`, `purity`, `globals`) warn rather than fail.
   eslint-plugin-react 7.37 declares ESLint only up to 9.7, so pnpm reports an unmet peer. The rules this preset turns
   on are tested on ESLint 10; any other `react/*` rule may not be.
-- All three: unused variables are errors, except arguments starting with `_`.
+- All three: unused variables are errors, except variables and arguments starting with `_`, the rest siblings of a
+  destructure (`const { hash, ...rest } = user`) and caught errors.
 - Prettier: 120 columns, 2 spaces, single quotes, no semicolons, trailing commas, LF; `.astro` files through
   prettier-plugin-astro, which comes with this package.
 
